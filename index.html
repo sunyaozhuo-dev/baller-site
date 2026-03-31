@@ -3,433 +3,622 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Baller - AI Basketball Training</title>
+    <title>Baller — AI Basketball Training</title>
     <meta name="description" content="Train smarter with AI-powered basketball plans tailored to your skill level, goals, and schedule.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #050508;
-            --surface: rgba(255,255,255,0.03);
-            --border: rgba(255,255,255,0.06);
-            --text: #f0f0f5;
-            --text-2: rgba(255,255,255,0.5);
-            --text-3: rgba(255,255,255,0.25);
-            --accent: #4A8CB5;
+            /* Warm-tinted palette — not pure black/white/gray */
+            --ink: oklch(16% 0.01 250);
+            --ink-soft: oklch(35% 0.01 250);
+            --ink-muted: oklch(52% 0.01 250);
+            --surface: oklch(97.5% 0.005 80);
+            --surface-warm: oklch(95% 0.01 70);
+            --cream: oklch(98.5% 0.004 80);
+            --accent: oklch(52% 0.12 230);
+            --accent-soft: oklch(90% 0.04 230);
+            --rule: oklch(88% 0.008 80);
+
+            --font-display: 'DM Serif Display', Georgia, serif;
+            --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+
+            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+            --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
         }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            background: var(--bg); color: var(--text);
+            font-family: var(--font-body);
+            color: var(--ink);
+            background: var(--cream);
             -webkit-font-smoothing: antialiased;
-            overflow-x: hidden;
+            font-size: 16px;
+            line-height: 1.6;
         }
 
-        /* ========= AMBIENT CANVAS ========= */
-        #ambient {
-            position: fixed; inset: 0; z-index: 0;
-            pointer-events: none;
-        }
-
-        /* Grain */
-        body::after {
-            content: ''; position: fixed; inset: 0; z-index: 1;
-            pointer-events: none; opacity: 0.03;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-            background-size: 256px;
-        }
-
-        /* ========= NAV ========= */
+        /* ===== NAV ===== */
         nav {
-            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-            height: 56px; padding: 0 32px;
+            position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+            padding: 0 clamp(24px, 5vw, 64px);
+            height: 60px;
             display: flex; align-items: center; justify-content: space-between;
-            background: rgba(5,5,8,0.6);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border);
-        }
-        .nav-brand {
-            text-decoration: none; color: var(--text);
-            font-weight: 700; font-size: 15px; letter-spacing: -0.3px;
-        }
-        .nav-right { display: flex; align-items: center; gap: 24px; }
-        .nav-right a {
-            color: var(--text-2); text-decoration: none;
-            font-size: 13px; font-weight: 500; transition: color 0.15s;
-        }
-        .nav-right a:hover { color: var(--text); }
-        .nav-dl {
-            background: #fff !important; color: #050508 !important;
-            padding: 6px 14px; border-radius: 6px; font-weight: 600 !important;
-        }
-
-        /* ========= HERO ========= */
-        .hero {
-            position: relative; z-index: 2;
-            min-height: 100vh;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            text-align: center;
-            padding: 120px 24px 100px;
-        }
-        .hero-content { position: relative; z-index: 2; max-width: 720px; }
-        .hero-pill {
-            display: inline-flex; align-items: center; gap: 8px;
-            border: 1px solid var(--border);
-            background: rgba(255,255,255,0.03);
-            padding: 5px 14px 5px 8px; border-radius: 100px;
-            font-size: 12px; font-weight: 500; color: var(--text-2);
-            margin-bottom: 32px;
-        }
-        .hero-pill .dot {
-            width: 6px; height: 6px; border-radius: 50%;
-            background: var(--accent);
-            box-shadow: 0 0 10px var(--accent), 0 0 20px rgba(74,140,181,0.3);
-            animation: pulse 2.5s infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(0.8); }
-        }
-        .hero h1 {
-            font-size: 76px; font-weight: 800; line-height: 0.98;
-            letter-spacing: -4px; margin-bottom: 28px;
-        }
-        .hero h1 .dim {
-            background: linear-gradient(180deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.12) 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .hero-desc {
-            font-size: 17px; line-height: 1.75; color: var(--text-2);
-            max-width: 460px; margin: 0 auto 48px;
-        }
-        .hero-actions { display: flex; align-items: center; justify-content: center; gap: 12px; }
-        .btn-main {
-            display: inline-flex; align-items: center; gap: 8px;
-            background: #fff; color: #050508;
-            padding: 12px 28px; border-radius: 8px;
-            font-size: 14px; font-weight: 600;
-            text-decoration: none; transition: all 0.25s;
-            box-shadow: 0 0 30px rgba(255,255,255,0.06);
-        }
-        .btn-main:hover { transform: translateY(-1px); box-shadow: 0 0 40px rgba(255,255,255,0.1); }
-        .btn-main svg { width: 16px; height: 16px; }
-        .btn-ghost {
-            display: inline-flex; align-items: center; gap: 6px;
-            color: var(--text-2); text-decoration: none;
-            padding: 12px 20px; border-radius: 8px;
-            font-size: 14px; font-weight: 500;
-            border: 1px solid var(--border);
-            transition: all 0.2s;
-        }
-        .btn-ghost:hover { color: var(--text); border-color: rgba(255,255,255,0.12); }
-
-        /* Hero card */
-        .hero-visual {
-            position: relative; z-index: 2;
-            margin-top: 72px; width: 100%; max-width: 560px;
-        }
-        .hero-card {
-            background: rgba(255,255,255,0.025);
-            border: 1px solid var(--border);
-            border-radius: 16px; padding: 32px;
-            position: relative; overflow: hidden;
+            background: oklch(98.5% 0.004 80 / 0.85);
             backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--rule);
         }
-        .hero-card::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(74,140,181,0.4), transparent);
+        .nav-wordmark {
+            font-family: var(--font-display);
+            font-size: 22px; letter-spacing: -0.5px;
+            color: var(--ink); text-decoration: none;
         }
-        .hero-card-header {
-            display: flex; align-items: center; justify-content: space-between;
-            margin-bottom: 24px;
-        }
-        .hero-card-title {
-            font-size: 13px; font-weight: 600; color: var(--text-2);
-            letter-spacing: 0.5px; text-transform: uppercase;
-        }
-        .hero-card-badge {
-            font-size: 11px; color: var(--accent);
-            background: rgba(74,140,181,0.12);
-            padding: 3px 10px; border-radius: 100px; font-weight: 600;
-        }
-        .hero-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-        .hero-stat {
-            text-align: center; padding: 16px 0;
-            border-radius: 10px;
-            background: rgba(255,255,255,0.02);
-            border: 1px solid var(--border);
-        }
-        .hero-stat-val {
-            font-size: 28px; font-weight: 800; letter-spacing: -1px;
-            background: linear-gradient(180deg, #fff 20%, rgba(255,255,255,0.2));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-        .hero-stat-label {
-            font-size: 10px; color: var(--text-3); margin-top: 4px;
-            text-transform: uppercase; letter-spacing: 1.5px; font-weight: 500;
-        }
-        .hero-bar-row { display: flex; align-items: center; gap: 12px; margin-top: 16px; }
-        .hero-bar-label { font-size: 11px; color: var(--text-3); width: 70px; font-weight: 500; }
-        .hero-bar-track {
-            flex: 1; height: 3px; background: rgba(255,255,255,0.04);
-            border-radius: 100px; overflow: hidden;
-        }
-        .hero-bar-fill {
-            height: 100%; border-radius: 100px;
-            background: linear-gradient(90deg, var(--accent), rgba(74,140,181,0.3));
-        }
-
-        /* ========= DIVIDER ========= */
-        .divider {
-            position: relative; z-index: 2;
-            width: 100%; height: 1px;
-            background: linear-gradient(90deg, transparent, var(--border), transparent);
-        }
-
-        /* ========= FEATURES ========= */
-        .features { position: relative; z-index: 2; padding: 120px 24px; }
-        .container { max-width: 960px; margin: 0 auto; }
-        .section-label {
-            font-size: 12px; font-weight: 600; color: var(--accent);
-            text-transform: uppercase; letter-spacing: 2px;
-            margin-bottom: 16px;
-        }
-        .section-title {
-            font-size: 40px; font-weight: 800; letter-spacing: -1.5px;
-            line-height: 1.1; margin-bottom: 16px;
-        }
-        .section-desc { font-size: 16px; color: var(--text-2); line-height: 1.7; max-width: 420px; }
-        .section-header { text-align: center; margin-bottom: 72px; }
-        .section-header .section-desc { margin: 0 auto; }
-
-        .feature-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
-            background: var(--border); border-radius: 16px; overflow: hidden;
-            border: 1px solid var(--border);
-        }
-        .feature-cell {
-            background: var(--bg); padding: 40px 28px;
-            transition: background 0.4s;
-        }
-        .feature-cell:hover { background: rgba(255,255,255,0.02); }
-        .f-icon {
-            width: 36px; height: 36px; margin-bottom: 20px;
-            color: var(--accent); opacity: 0.8;
-        }
-        .f-icon svg { width: 22px; height: 22px; }
-        .feature-cell h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
-        .feature-cell p { font-size: 13px; color: var(--text-3); line-height: 1.7; }
-
-        /* ========= HOW ========= */
-        .how { position: relative; z-index: 2; padding: 120px 24px; }
-        .how-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px; margin-top: 72px; }
-        .how-num {
-            font-size: 48px; font-weight: 900; letter-spacing: -2px;
-            background: linear-gradient(180deg, rgba(255,255,255,0.08), transparent);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            line-height: 1; margin-bottom: 16px;
-        }
-        .how-step h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
-        .how-step p { font-size: 13px; color: var(--text-3); line-height: 1.7; }
-
-        /* ========= CTA ========= */
-        .cta {
-            position: relative; z-index: 2;
-            padding: 140px 24px; text-align: center;
-        }
-        .cta h2 { font-size: 48px; font-weight: 800; letter-spacing: -2px; margin-bottom: 16px; }
-        .cta p { font-size: 16px; color: var(--text-2); margin-bottom: 40px; line-height: 1.7; }
-
-        /* ========= FOOTER ========= */
-        footer {
-            position: relative; z-index: 2;
-            padding: 32px 32px; border-top: 1px solid var(--border);
-        }
-        .footer-inner {
-            max-width: 960px; margin: 0 auto;
-            display: flex; align-items: center; justify-content: space-between;
-        }
-        .footer-copy { font-size: 12px; color: var(--text-3); }
-        .footer-links { display: flex; gap: 24px; }
-        .footer-links a {
-            font-size: 12px; color: var(--text-3);
+        .nav-links { display: flex; align-items: center; gap: 28px; }
+        .nav-links a {
+            font-size: 14px; font-weight: 500; color: var(--ink-muted);
             text-decoration: none; transition: color 0.15s;
         }
-        .footer-links a:hover { color: var(--text-2); }
-
-        /* ========= REVEAL ========= */
-        .reveal {
-            opacity: 0; transform: translateY(20px);
-            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
-                        transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        .nav-links a:hover { color: var(--ink); }
+        .nav-download {
+            font-size: 13px !important; font-weight: 700 !important;
+            color: var(--cream) !important;
+            background: var(--ink);
+            padding: 8px 18px; border-radius: 8px;
+            transition: opacity 0.15s;
         }
-        .reveal.show { opacity: 1; transform: none; }
-        .d1 { transition-delay: 0.06s; }
-        .d2 { transition-delay: 0.12s; }
-        .d3 { transition-delay: 0.18s; }
-        .d4 { transition-delay: 0.24s; }
+        .nav-download:hover { opacity: 0.8; color: var(--cream) !important; }
 
-        /* ========= RESPONSIVE ========= */
-        @media (max-width: 768px) {
-            nav { padding: 0 20px; }
-            .nav-right a:not(.nav-dl) { display: none; }
-            .hero { padding: 100px 20px 80px; }
-            .hero h1 { font-size: 44px; letter-spacing: -2px; }
-            .hero-desc { font-size: 15px; }
-            .hero-stats { grid-template-columns: repeat(3, 1fr); gap: 8px; }
-            .features, .how, .cta { padding: 80px 20px; }
-            .section-title { font-size: 30px; }
-            .feature-grid { grid-template-columns: 1fr; }
-            .how-grid { grid-template-columns: 1fr; gap: 32px; }
-            .cta h2 { font-size: 32px; }
+        /* ===== HERO ===== */
+        .hero {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: clamp(48px, 6vw, 96px);
+            padding: 140px clamp(24px, 5vw, 64px) 80px;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+        .hero-text { max-width: 560px; }
+        .hero-label {
+            font-size: 12px; font-weight: 700; letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 24px;
+        }
+        .hero h1 {
+            font-family: var(--font-display);
+            font-size: clamp(44px, 5.5vw, 72px);
+            font-weight: 400;
+            line-height: 1.05;
+            letter-spacing: -1.5px;
+            margin-bottom: 28px;
+        }
+        .hero h1 em {
+            font-style: italic;
+            color: var(--accent);
+        }
+        .hero-body {
+            font-size: 17px; line-height: 1.75;
+            color: var(--ink-soft);
+            max-width: 420px;
+            margin-bottom: 40px;
+        }
+        .hero-cta {
+            display: inline-flex; align-items: center; gap: 10px;
+            background: var(--ink); color: var(--cream);
+            text-decoration: none;
+            padding: 14px 28px; border-radius: 10px;
+            font-size: 15px; font-weight: 700;
+            transition: transform 0.25s var(--ease-out), box-shadow 0.25s;
+        }
+        .hero-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px oklch(16% 0.01 250 / 0.15);
+        }
+        .hero-cta svg { width: 18px; height: 18px; }
+
+        /* Hero visual — tilted screen comp */
+        .hero-visual {
+            position: relative;
+            display: flex; justify-content: center;
+        }
+        .screen-comp {
+            width: 100%; max-width: 380px;
+            aspect-ratio: 3/4;
+            background: var(--surface-warm);
+            border-radius: 24px;
+            border: 1px solid var(--rule);
+            padding: clamp(20px, 3vw, 36px);
+            display: flex; flex-direction: column;
+            transform: rotate(2deg);
+            transition: transform 0.5s var(--ease-out);
+            overflow: hidden;
+            position: relative;
+        }
+        .screen-comp:hover { transform: rotate(0deg); }
+        .screen-top {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 28px;
+        }
+        .screen-greeting { font-size: 13px; color: var(--ink-muted); font-weight: 500; }
+        .screen-date { font-size: 12px; color: var(--ink-muted); font-weight: 500; opacity: 0.6; }
+        .screen-plan-title {
+            font-family: var(--font-display);
+            font-size: clamp(22px, 2.5vw, 28px);
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+        .screen-drills { display: flex; flex-direction: column; gap: 10px; flex: 1; }
+        .drill-item {
+            display: flex; align-items: center; gap: 14px;
+            padding: 14px 16px;
+            background: var(--cream);
+            border-radius: 12px;
+            border: 1px solid var(--rule);
+            transition: transform 0.2s var(--ease-out);
+        }
+        .drill-item:hover { transform: translateX(4px); }
+        .drill-num {
+            width: 32px; height: 32px; border-radius: 8px;
+            background: var(--accent-soft);
+            color: var(--accent);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px; font-weight: 800; flex-shrink: 0;
+        }
+        .drill-info { flex: 1; min-width: 0; }
+        .drill-name { font-size: 14px; font-weight: 700; }
+        .drill-meta { font-size: 12px; color: var(--ink-muted); margin-top: 1px; }
+        .drill-dur {
+            font-size: 12px; font-weight: 600;
+            color: var(--ink-muted); white-space: nowrap;
+        }
+        .screen-progress {
+            margin-top: auto; padding-top: 20px;
+            border-top: 1px solid var(--rule);
+        }
+        .progress-label {
+            display: flex; justify-content: space-between;
+            font-size: 12px; font-weight: 600; margin-bottom: 8px;
+        }
+        .progress-label span:last-child { color: var(--accent); }
+        .progress-track {
+            height: 6px; background: var(--rule); border-radius: 100px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%; width: 35%;
+            background: var(--accent); border-radius: 100px;
+            transition: width 1.5s var(--ease-out);
+        }
+
+        /* ===== MARQUEE ===== */
+        .marquee-section {
+            border-top: 1px solid var(--rule);
+            border-bottom: 1px solid var(--rule);
+            padding: 20px 0;
+            overflow: hidden;
+            background: var(--surface-warm);
+        }
+        .marquee-track {
+            display: flex; gap: 48px;
+            animation: scroll-left 30s linear infinite;
+            width: max-content;
+        }
+        @keyframes scroll-left {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+        .marquee-item {
+            font-family: var(--font-display);
+            font-size: 18px; white-space: nowrap;
+            color: var(--ink-muted); opacity: 0.5;
+            display: flex; align-items: center; gap: 16px;
+        }
+        .marquee-item::after {
+            content: ''; width: 5px; height: 5px;
+            border-radius: 50%; background: var(--ink-muted); opacity: 0.3;
+        }
+
+        /* ===== FEATURES — asymmetric, not a grid ===== */
+        .features {
+            padding: clamp(80px, 10vw, 160px) clamp(24px, 5vw, 64px);
+            max-width: 1280px; margin: 0 auto;
+        }
+        .features-header {
+            max-width: 480px;
+            margin-bottom: clamp(56px, 7vw, 96px);
+        }
+        .features-header .section-label {
+            font-size: 12px; font-weight: 700; letter-spacing: 2.5px;
+            text-transform: uppercase; color: var(--accent);
+            margin-bottom: 16px;
+        }
+        .features-header h2 {
+            font-family: var(--font-display);
+            font-size: clamp(32px, 4vw, 48px);
+            line-height: 1.1; letter-spacing: -1px;
+            margin-bottom: 16px;
+        }
+        .features-header p {
+            font-size: 16px; color: var(--ink-soft); line-height: 1.7;
+        }
+
+        /* Bento-ish but varied */
+        .feature-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 16px;
+        }
+        .f-item {
+            padding: clamp(28px, 3vw, 44px);
+            border-radius: 20px;
+            border: 1px solid var(--rule);
+            background: var(--surface);
+            transition: transform 0.35s var(--ease-out);
+        }
+        .f-item:hover { transform: translateY(-4px); }
+        .f-item.wide { grid-column: span 2; }
+        .f-item.wide .f-inner {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: clamp(24px, 3vw, 48px); align-items: center;
+        }
+        .f-num {
+            font-family: var(--font-display);
+            font-size: 14px; color: var(--accent);
+            margin-bottom: 16px;
+        }
+        .f-item h3 {
+            font-family: var(--font-display);
+            font-size: clamp(22px, 2.5vw, 28px);
+            line-height: 1.2; letter-spacing: -0.5px;
+            margin-bottom: 10px;
+        }
+        .f-item p {
+            font-size: 15px; color: var(--ink-soft); line-height: 1.7;
+            max-width: 360px;
+        }
+        .f-visual {
+            aspect-ratio: 16/9;
+            background: var(--surface-warm);
+            border-radius: 12px;
+            border: 1px solid var(--rule);
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
+        }
+        .f-visual-bars {
+            display: flex; align-items: flex-end; gap: 8px;
+            height: 60%; padding: 0 20%;
+        }
+        .f-bar {
+            flex: 1; border-radius: 4px 4px 0 0;
+            background: var(--accent-soft);
+            transition: height 0.8s var(--ease-out);
+        }
+        .f-bar:nth-child(2) { background: var(--accent); }
+
+        /* ===== HOW ===== */
+        .how-section {
+            padding: clamp(80px, 10vw, 140px) clamp(24px, 5vw, 64px);
+            background: var(--surface-warm);
+            border-top: 1px solid var(--rule);
+            border-bottom: 1px solid var(--rule);
+        }
+        .how-inner {
+            max-width: 1280px; margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: clamp(48px, 6vw, 96px);
+            align-items: start;
+        }
+        .how-header .section-label {
+            font-size: 12px; font-weight: 700; letter-spacing: 2.5px;
+            text-transform: uppercase; color: var(--accent);
+            margin-bottom: 16px;
+        }
+        .how-header h2 {
+            font-family: var(--font-display);
+            font-size: clamp(32px, 4vw, 48px);
+            line-height: 1.1; letter-spacing: -1px;
+        }
+        .how-steps {
+            display: flex; flex-direction: column;
+            border-left: 1px solid var(--rule);
+        }
+        .how-step {
+            padding: clamp(24px, 3vw, 36px) clamp(24px, 3vw, 40px);
+            border-bottom: 1px solid var(--rule);
+            display: grid;
+            grid-template-columns: 48px 1fr;
+            gap: 20px; align-items: start;
+        }
+        .how-step:last-child { border-bottom: none; }
+        .step-num {
+            font-family: var(--font-display);
+            font-size: 36px; color: var(--rule);
+            line-height: 1;
+        }
+        .how-step h3 { font-size: 17px; font-weight: 800; margin-bottom: 6px; }
+        .how-step p { font-size: 14px; color: var(--ink-soft); line-height: 1.7; }
+
+        /* ===== CTA ===== */
+        .cta-section {
+            padding: clamp(100px, 12vw, 180px) clamp(24px, 5vw, 64px);
+            text-align: center;
+            max-width: 640px;
+            margin: 0 auto;
+        }
+        .cta-section h2 {
+            font-family: var(--font-display);
+            font-size: clamp(36px, 4.5vw, 56px);
+            line-height: 1.08;
+            letter-spacing: -1.5px;
+            margin-bottom: 20px;
+        }
+        .cta-section h2 em {
+            font-style: italic;
+            color: var(--accent);
+        }
+        .cta-section p {
+            font-size: 17px; color: var(--ink-soft);
+            line-height: 1.7; margin-bottom: 36px;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            border-top: 1px solid var(--rule);
+            padding: 28px clamp(24px, 5vw, 64px);
+        }
+        .footer-inner {
+            max-width: 1280px; margin: 0 auto;
+            display: flex; align-items: center;
+            justify-content: space-between;
+        }
+        .footer-copy {
+            font-size: 12px; color: var(--ink-muted);
+        }
+        .footer-links { display: flex; gap: 24px; }
+        .footer-links a {
+            font-size: 12px; color: var(--ink-muted);
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+        .footer-links a:hover { color: var(--ink); }
+
+        /* ===== SCROLL REVEAL ===== */
+        .sr {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+        }
+        .sr.vis { opacity: 1; transform: none; }
+        .sr-d1 { transition-delay: 0.08s; }
+        .sr-d2 { transition-delay: 0.16s; }
+        .sr-d3 { transition-delay: 0.24s; }
+
+        /* ===== REDUCED MOTION ===== */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 860px) {
+            .hero {
+                grid-template-columns: 1fr;
+                padding-top: 120px;
+                gap: 48px;
+            }
+            .hero-visual { order: -1; }
+            .screen-comp { max-width: 320px; transform: none; }
+            .screen-comp:hover { transform: none; }
+            .feature-layout { grid-template-columns: 1fr; }
+            .f-item.wide { grid-column: span 1; }
+            .f-item.wide .f-inner { grid-template-columns: 1fr; }
+            .how-inner { grid-template-columns: 1fr; }
+            .marquee-section { display: none; }
+        }
+        @media (max-width: 480px) {
+            .hero-text { text-align: center; }
+            .hero-body { margin-left: auto; margin-right: auto; }
+            .nav-links a:not(.nav-download) { display: none; }
             .footer-inner { flex-direction: column; gap: 12px; text-align: center; }
         }
     </style>
 </head>
 <body>
 
-<canvas id="ambient"></canvas>
-
 <nav>
-    <a href="/" class="nav-brand">Baller</a>
-    <div class="nav-right">
+    <a href="/" class="nav-wordmark">Baller</a>
+    <div class="nav-links">
         <a href="#features">Features</a>
         <a href="#how">How It Works</a>
-        <a href="#" class="nav-dl">Download</a>
+        <a href="#" class="nav-download">Download</a>
     </div>
 </nav>
 
+<!-- HERO -->
 <section class="hero">
-    <div class="hero-content">
-        <div class="hero-pill reveal">
-            <span class="dot"></span>
-            Now available on iOS
-        </div>
-        <h1 class="reveal d1">AI-powered<br><span class="dim">basketball training</span></h1>
-        <p class="hero-desc reveal d2">Personalized plans that adapt to your skill level, position, and goals. Track your progress. Get better every day.</p>
-        <div class="hero-actions reveal d3">
-            <a href="#" class="btn-main">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-                Download for iOS
-            </a>
-            <a href="#features" class="btn-ghost">Learn more</a>
-        </div>
+    <div class="hero-text">
+        <p class="hero-label sr">AI Basketball Training</p>
+        <h1 class="sr sr-d1">Your game,<br><em>reimagined</em></h1>
+        <p class="hero-body sr sr-d2">Baller builds personalized training plans that adapt to your position, skill level, and schedule. Every drill is purposeful. Every session moves you forward.</p>
+        <a href="#" class="hero-cta sr sr-d3">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+            Download for iOS
+        </a>
     </div>
-    <div class="hero-visual reveal d4">
-        <div class="hero-card">
-            <div class="hero-card-header">
-                <span class="hero-card-title">Training Overview</span>
-                <span class="hero-card-badge">AI Generated</span>
+    <div class="hero-visual sr sr-d2">
+        <div class="screen-comp">
+            <div class="screen-top">
+                <span class="screen-greeting">Good morning</span>
+                <span class="screen-date">Mon, Mar 31</span>
             </div>
-            <div class="hero-stats">
-                <div class="hero-stat">
-                    <div class="hero-stat-val">87</div>
-                    <div class="hero-stat-label">Score</div>
+            <h3 class="screen-plan-title">Today's Plan</h3>
+            <div class="screen-drills">
+                <div class="drill-item">
+                    <div class="drill-num">1</div>
+                    <div class="drill-info">
+                        <div class="drill-name">Crossover Series</div>
+                        <div class="drill-meta">Ball handling</div>
+                    </div>
+                    <span class="drill-dur">8 min</span>
                 </div>
-                <div class="hero-stat">
-                    <div class="hero-stat-val">12</div>
-                    <div class="hero-stat-label">Sessions</div>
+                <div class="drill-item">
+                    <div class="drill-num">2</div>
+                    <div class="drill-info">
+                        <div class="drill-name">Catch & Shoot</div>
+                        <div class="drill-meta">Shooting</div>
+                    </div>
+                    <span class="drill-dur">12 min</span>
                 </div>
-                <div class="hero-stat">
-                    <div class="hero-stat-val">5</div>
-                    <div class="hero-stat-label">Streak</div>
+                <div class="drill-item">
+                    <div class="drill-num">3</div>
+                    <div class="drill-info">
+                        <div class="drill-name">Defensive Slides</div>
+                        <div class="drill-meta">Footwork</div>
+                    </div>
+                    <span class="drill-dur">6 min</span>
                 </div>
             </div>
-            <div class="hero-bar-row">
-                <span class="hero-bar-label">Shooting</span>
-                <div class="hero-bar-track"><div class="hero-bar-fill" style="width:78%"></div></div>
-            </div>
-            <div class="hero-bar-row">
-                <span class="hero-bar-label">Handles</span>
-                <div class="hero-bar-track"><div class="hero-bar-fill" style="width:65%"></div></div>
-            </div>
-            <div class="hero-bar-row">
-                <span class="hero-bar-label">Footwork</span>
-                <div class="hero-bar-track"><div class="hero-bar-fill" style="width:52%"></div></div>
+            <div class="screen-progress">
+                <div class="progress-label">
+                    <span>Week 3 of 8</span>
+                    <span>35%</span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill"></div>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
-<div class="divider"></div>
+<!-- MARQUEE -->
+<div class="marquee-section">
+    <div class="marquee-track" aria-hidden="true">
+        <span class="marquee-item">Shooting</span>
+        <span class="marquee-item">Ball Handling</span>
+        <span class="marquee-item">Footwork</span>
+        <span class="marquee-item">Defense</span>
+        <span class="marquee-item">Conditioning</span>
+        <span class="marquee-item">Court Vision</span>
+        <span class="marquee-item">Post Moves</span>
+        <span class="marquee-item">Free Throws</span>
+        <span class="marquee-item">Shooting</span>
+        <span class="marquee-item">Ball Handling</span>
+        <span class="marquee-item">Footwork</span>
+        <span class="marquee-item">Defense</span>
+        <span class="marquee-item">Conditioning</span>
+        <span class="marquee-item">Court Vision</span>
+        <span class="marquee-item">Post Moves</span>
+        <span class="marquee-item">Free Throws</span>
+    </div>
+</div>
 
+<!-- FEATURES -->
 <section class="features" id="features">
-    <div class="container">
-        <div class="section-header">
-            <div class="section-label reveal">Features</div>
-            <h2 class="section-title reveal d1">Built for hoopers<br><span style="color:var(--text-3)">who want to improve</span></h2>
-            <p class="section-desc reveal d2">Everything you need to train smarter, not harder.</p>
+    <div class="features-header sr">
+        <p class="section-label">What you get</p>
+        <h2>Training that thinks <em>with</em> you</h2>
+        <p>Not another generic workout app. Baller understands basketball and builds plans the way a real coach would.</p>
+    </div>
+    <div class="feature-layout">
+        <div class="f-item wide sr">
+            <div class="f-inner">
+                <div>
+                    <p class="f-num">01</p>
+                    <h3>AI-generated plans</h3>
+                    <p>Every plan is built from scratch based on your position, skill level, available time, and what you want to improve. No templates.</p>
+                </div>
+                <div class="f-visual">
+                    <div class="f-visual-bars">
+                        <div class="f-bar" style="height:45%"></div>
+                        <div class="f-bar" style="height:72%"></div>
+                        <div class="f-bar" style="height:58%"></div>
+                        <div class="f-bar" style="height:85%"></div>
+                        <div class="f-bar" style="height:64%"></div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="feature-grid reveal d3">
-            <div class="feature-cell">
-                <div class="f-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg></div>
-                <h3>AI Training Plans</h3>
-                <p>Personalized workouts generated by AI based on your position, skill level, and goals.</p>
-            </div>
-            <div class="feature-cell">
-                <div class="f-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
-                <h3>Progress Tracking</h3>
-                <p>Detailed performance scores and skill breakdowns after every training session.</p>
-            </div>
-            <div class="feature-cell">
-                <div class="f-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
-                <h3>Drill Library</h3>
-                <p>Hundreds of drills for shooting, ball handling, footwork, defense, and more.</p>
-            </div>
-            <div class="feature-cell">
-                <div class="f-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
-                <h3>Smart Scheduling</h3>
-                <p>Set your available time and Baller builds a training schedule around your life.</p>
-            </div>
-            <div class="feature-cell">
-                <div class="f-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
-                <h3>Adaptive Difficulty</h3>
-                <p>The AI adjusts intensity as you improve so you're always challenged.</p>
-            </div>
-            <div class="feature-cell">
-                <div class="f-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg></div>
-                <h3>AI Reports</h3>
-                <p>Get detailed AI-generated insights and recommendations after each session.</p>
+        <div class="f-item sr">
+            <p class="f-num">02</p>
+            <h3>Hundreds of drills</h3>
+            <p>Shooting, handles, footwork, defense — a full library of drills with clear instructions and difficulty levels.</p>
+        </div>
+        <div class="f-item sr sr-d1">
+            <p class="f-num">03</p>
+            <h3>Progress reports</h3>
+            <p>AI-written session reports that highlight what you did well and where to focus next. Real insight, not just numbers.</p>
+        </div>
+        <div class="f-item wide sr">
+            <div class="f-inner">
+                <div>
+                    <p class="f-num">04</p>
+                    <h3>Adapts as you grow</h3>
+                    <p>The AI tracks your progression and adjusts difficulty, drill selection, and focus areas so your training always matches where you are today.</p>
+                </div>
+                <div>
+                    <p class="f-num">05</p>
+                    <h3>Fits your schedule</h3>
+                    <p>Tell Baller when you can train and for how long. It plans around your life — not the other way around.</p>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
-<div class="divider"></div>
-
-<section class="how" id="how">
-    <div class="container">
-        <div class="section-header">
-            <div class="section-label reveal">How It Works</div>
-            <h2 class="section-title reveal d1">Three steps to<br><span style="color:var(--text-3)">better basketball</span></h2>
+<!-- HOW -->
+<section class="how-section" id="how">
+    <div class="how-inner">
+        <div class="how-header sr">
+            <p class="section-label">How it works</p>
+            <h2>Three steps to better basketball</h2>
         </div>
-        <div class="how-grid">
-            <div class="how-step reveal"><div class="how-num">01</div><h3>Set your profile</h3><p>Tell us your position, skill level, and what you want to work on.</p></div>
-            <div class="how-step reveal d1"><div class="how-num">02</div><h3>Get your plan</h3><p>Our AI creates a personalized training schedule with curated drills.</p></div>
-            <div class="how-step reveal d2"><div class="how-num">03</div><h3>Train & level up</h3><p>Complete workouts, track results, and watch your skills improve.</p></div>
+        <div class="how-steps">
+            <div class="how-step sr">
+                <div class="step-num">1</div>
+                <div>
+                    <h3>Tell us about your game</h3>
+                    <p>Your position, experience, strengths, weaknesses, and how much time you have. Takes about 2 minutes.</p>
+                </div>
+            </div>
+            <div class="how-step sr sr-d1">
+                <div class="step-num">2</div>
+                <div>
+                    <h3>Get a plan built for you</h3>
+                    <p>The AI designs a multi-week training program with drills, progression, and rest days baked in.</p>
+                </div>
+            </div>
+            <div class="how-step sr sr-d2">
+                <div class="step-num">3</div>
+                <div>
+                    <h3>Train, track, repeat</h3>
+                    <p>Complete your workouts, log results, and get AI feedback. Your plan evolves as you do.</p>
+                </div>
+            </div>
         </div>
     </div>
 </section>
 
-<div class="divider"></div>
-
-<section class="cta">
-    <h2 class="reveal">Ready to train?</h2>
-    <p class="reveal d1">Download Baller and start improving your game today.</p>
-    <a href="#" class="btn-main reveal d2">
-        <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+<!-- CTA -->
+<section class="cta-section">
+    <h2 class="sr">Your next workout<br>starts <em>here</em></h2>
+    <p class="sr sr-d1">Download Baller and start training with an AI coach that knows basketball.</p>
+    <a href="#" class="hero-cta sr sr-d2">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
         Download for iOS
     </a>
 </section>
 
 <footer>
     <div class="footer-inner">
-        <div class="footer-copy">&copy; 2026 Baller</div>
+        <span class="footer-copy">&copy; 2026 Baller</span>
         <div class="footer-links">
             <a href="/privacy.html">Privacy</a>
             <a href="/terms.html">Terms</a>
@@ -439,104 +628,21 @@
 </footer>
 
 <script>
-// ===== Ambient animated background =====
-(function() {
-    const canvas = document.getElementById('ambient');
-    const ctx = canvas.getContext('2d');
-    let w, h, orbs = [], mouse = { x: 0, y: 0 };
+// Scroll reveal
+const obs = new IntersectionObserver(
+    (entries) => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); }),
+    { threshold: 0.12 }
+);
+document.querySelectorAll('.sr').forEach(el => obs.observe(el));
 
-    function resize() {
-        w = canvas.width = window.innerWidth;
-        h = canvas.height = window.innerHeight;
+// Animate progress bar on visibility
+const progObs = new IntersectionObserver(([e]) => {
+    if (e.isIntersecting) {
+        e.target.querySelector('.progress-fill').style.width = '35%';
     }
-    window.addEventListener('resize', resize);
-    resize();
-
-    // Create floating light orbs
-    const colors = [
-        { r: 74, g: 140, b: 181 },   // brand blue
-        { r: 45, g: 106, b: 143 },    // darker blue
-        { r: 90, g: 160, b: 200 },    // lighter blue
-        { r: 30, g: 80, b: 130 },     // deep blue
-        { r: 60, g: 120, b: 160 },    // mid blue
-    ];
-
-    for (let i = 0; i < 5; i++) {
-        const c = colors[i % colors.length];
-        orbs.push({
-            x: Math.random() * w,
-            y: Math.random() * h,
-            vx: (Math.random() - 0.5) * 0.3,
-            vy: (Math.random() - 0.5) * 0.3,
-            r: 200 + Math.random() * 200,
-            color: c,
-            alpha: 0.06 + Math.random() * 0.06,
-            phase: Math.random() * Math.PI * 2,
-            speed: 0.002 + Math.random() * 0.003,
-        });
-    }
-
-    // Track scroll for parallax
-    let scrollY = 0;
-    window.addEventListener('scroll', () => { scrollY = window.scrollY; });
-
-    // Track mouse for subtle interaction
-    window.addEventListener('mousemove', (e) => {
-        mouse.x = e.clientX;
-        mouse.y = e.clientY;
-    });
-
-    function draw() {
-        ctx.clearRect(0, 0, w, h);
-
-        orbs.forEach(orb => {
-            orb.phase += orb.speed;
-
-            // Gentle organic motion
-            const ox = Math.sin(orb.phase) * 60 + Math.cos(orb.phase * 0.7) * 30;
-            const oy = Math.cos(orb.phase * 0.8) * 40 + Math.sin(orb.phase * 0.5) * 20;
-
-            // Subtle mouse influence
-            const dx = (mouse.x - orb.x) * 0.0003;
-            const dy = (mouse.y - orb.y) * 0.0003;
-
-            orb.x += orb.vx + dx;
-            orb.y += orb.vy + dy;
-
-            // Wrap around
-            if (orb.x < -orb.r) orb.x = w + orb.r;
-            if (orb.x > w + orb.r) orb.x = -orb.r;
-            if (orb.y < -orb.r) orb.y = h + orb.r;
-            if (orb.y > h + orb.r) orb.y = -orb.r;
-
-            const drawX = orb.x + ox;
-            const drawY = orb.y + oy - scrollY * 0.1;
-
-            // Breathing alpha
-            const breathe = Math.sin(orb.phase * 1.5) * 0.015;
-
-            const gradient = ctx.createRadialGradient(drawX, drawY, 0, drawX, drawY, orb.r);
-            const a = orb.alpha + breathe;
-            gradient.addColorStop(0, `rgba(${orb.color.r},${orb.color.g},${orb.color.b},${a})`);
-            gradient.addColorStop(0.5, `rgba(${orb.color.r},${orb.color.g},${orb.color.b},${a * 0.4})`);
-            gradient.addColorStop(1, `rgba(${orb.color.r},${orb.color.g},${orb.color.b},0)`);
-
-            ctx.fillStyle = gradient;
-            ctx.beginPath();
-            ctx.arc(drawX, drawY, orb.r, 0, Math.PI * 2);
-            ctx.fill();
-        });
-
-        requestAnimationFrame(draw);
-    }
-    draw();
-})();
-
-// ===== Scroll reveal =====
-const io = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('show'); });
-}, { threshold: 0.15 });
-document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+}, { threshold: 0.3 });
+const progEl = document.querySelector('.screen-progress');
+if (progEl) progObs.observe(progEl);
 </script>
 
 </body>
