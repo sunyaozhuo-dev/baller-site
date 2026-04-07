@@ -1,600 +1,550 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Baller — AI Basketball Training</title>
-    <meta name="description" content="Train smarter with AI-powered basketball plans tailored to your skill level, goals, and schedule.">
-    <style>
-        :root {
-            --bg: #F7F7F9;
-            --white: #FFFFFF;
-            --blue: #4A8CB5;
-            --blue-light: rgba(74,140,181,0.08);
-            --blue-glow: rgba(74,140,181,0.12);
-            --green: #22C55E;
-            --green-hover: #1dad50;
-            --gold: #FBBF24;
-            --text: #191A14;
-            --text-60: rgba(25,26,20,0.60);
-            --text-38: rgba(25,26,20,0.38);
-            --text-22: rgba(25,26,20,0.22);
-            --surface: rgba(0,0,0,0.04);
-            --border: rgba(0,0,0,0.08);
-            --card-top: #F7F7FA;
-            --card-bot: rgba(255,255,255,0.95);
-            --shadow: rgba(0,0,0,0.06);
-            --r-sm: 8px;
-            --r-md: 14px;
-            --r-lg: 24px;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif;
-            color: var(--text); background: var(--bg);
-            -webkit-font-smoothing: antialiased;
-            font-size: 16px; line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        /* ===== AMBIENT ===== */
-        .ambient {
-            position: fixed; inset: 0; z-index: 0;
-            pointer-events: none; overflow: hidden;
-        }
-        .glow {
-            position: absolute; border-radius: 50%;
-            filter: blur(120px);
-        }
-        .glow-1 {
-            width: 600px; height: 600px;
-            background: rgba(74,140,181,0.09);
-            top: -10%; left: 5%;
-            animation: drift-a 22s ease-in-out infinite;
-        }
-        .glow-2 {
-            width: 500px; height: 500px;
-            background: rgba(34,197,94,0.05);
-            top: 30%; right: -8%;
-            animation: drift-b 28s ease-in-out infinite;
-        }
-        .glow-3 {
-            width: 450px; height: 450px;
-            background: rgba(74,140,181,0.06);
-            bottom: 0; left: 25%;
-            animation: drift-c 25s ease-in-out infinite;
-        }
-        @keyframes drift-a {
-            0%, 100% { transform: translate(0,0); }
-            33% { transform: translate(80px, 60px); }
-            66% { transform: translate(-20px, 100px); }
-        }
-        @keyframes drift-b {
-            0%, 100% { transform: translate(0,0); }
-            33% { transform: translate(-70px, 80px); }
-            66% { transform: translate(-100px, -20px); }
-        }
-        @keyframes drift-c {
-            0%, 100% { transform: translate(0,0); }
-            33% { transform: translate(60px, -60px); }
-            66% { transform: translate(90px, 20px); }
-        }
-
-        nav, section, footer { position: relative; z-index: 2; }
-
-        /* ===== NAV ===== */
-        nav {
-            position: fixed; top: 0; left: 0; right: 0; z-index: 50;
-            height: 56px; padding: 0 clamp(20px, 4vw, 48px);
-            display: flex; align-items: center; justify-content: space-between;
-            background: rgba(247,247,249,0.8);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border);
-        }
-        .nav-brand {
-            display: flex; align-items: center; gap: 8px;
-            text-decoration: none; color: var(--text);
-        }
-        .nav-icon {
-            width: 30px; height: 30px;
-            border-radius: var(--r-sm);
-            background: var(--blue);
-            display: flex; align-items: center; justify-content: center;
-        }
-        .nav-icon svg { width: 18px; height: 18px; }
-        .nav-brand span { font-size: 17px; font-weight: 700; }
-        .nav-links { display: flex; align-items: center; gap: 24px; }
-        .nav-links a {
-            font-size: 14px; font-weight: 500; color: var(--text-60);
-            text-decoration: none; transition: color 0.15s;
-        }
-        .nav-links a:hover { color: var(--text); }
-        .nav-cta {
-            background: var(--green) !important; color: var(--white) !important;
-            padding: 7px 16px; border-radius: var(--r-sm);
-            font-weight: 700 !important; font-size: 14px !important;
-            transition: background 0.15s;
-        }
-        .nav-cta:hover { background: var(--green-hover) !important; color: var(--white) !important; }
-
-        /* ===== HERO ===== */
-        .hero {
-            min-height: 100vh;
-            display: flex; align-items: center; justify-content: center;
-            padding: 120px clamp(20px, 4vw, 48px) 80px;
-        }
-        .hero-inner {
-            max-width: 1100px; width: 100%;
-            display: grid; grid-template-columns: 1fr 1fr;
-            align-items: center;
-            gap: clamp(40px, 5vw, 80px);
-        }
-        .hero-text { max-width: 480px; }
-        .hero-tag {
-            display: inline-flex; align-items: center; gap: 6px;
-            font-size: 12px; font-weight: 600;
-            color: var(--blue); letter-spacing: 1px;
-            text-transform: uppercase;
-            margin-bottom: 20px;
-        }
-        .hero-tag::before {
-            content: ''; width: 6px; height: 6px;
-            border-radius: 50%; background: var(--blue);
-        }
-        .hero h1 {
-            font-size: clamp(36px, 5vw, 52px);
-            font-weight: 800; line-height: 1.08;
-            letter-spacing: -1.5px;
-            margin-bottom: 16px;
-        }
-        .hero h1 .accent { color: var(--blue); }
-        .hero-body {
-            font-size: 16px; line-height: 1.7;
-            color: var(--text-60);
-            margin-bottom: 32px;
-        }
-        .hero-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-        .btn-green {
-            display: inline-flex; align-items: center; gap: 8px;
-            background: var(--green); color: var(--white);
-            text-decoration: none; font-size: 15px; font-weight: 700;
-            padding: 13px 26px; border-radius: var(--r-sm);
-            transition: background 0.15s, transform 0.2s;
-        }
-        .btn-green:hover { background: var(--green-hover); transform: translateY(-1px); }
-        .btn-green svg { width: 16px; height: 16px; }
-        .btn-outline {
-            display: inline-flex; align-items: center;
-            color: var(--text-60); text-decoration: none;
-            font-size: 15px; font-weight: 500;
-            padding: 13px 20px; border-radius: var(--r-sm);
-            border: 1px solid var(--border);
-            transition: border-color 0.15s, color 0.15s;
-        }
-        .btn-outline:hover { border-color: var(--text-22); color: var(--text); }
-
-        /* Phone mockup */
-        .hero-phone { display: flex; justify-content: center; }
-        .phone {
-            width: 280px;
-            background: var(--text);
-            border-radius: 40px;
-            padding: 10px;
-            box-shadow: 0 32px 64px var(--shadow), 0 0 0 1px rgba(0,0,0,0.04);
-        }
-        .phone-inner {
-            background: var(--bg);
-            border-radius: 32px;
-            overflow: hidden;
-            aspect-ratio: 9/19.5;
-            display: flex; flex-direction: column;
-        }
-        .phone-status {
-            height: 44px; padding: 0 20px;
-            display: flex; align-items: flex-end; justify-content: center;
-            padding-bottom: 6px; position: relative;
-        }
-        .phone-notch {
-            width: 100px; height: 28px;
-            background: var(--text);
-            border-radius: 0 0 16px 16px;
-        }
-        .phone-content {
-            flex: 1; padding: 16px 16px 12px;
-            display: flex; flex-direction: column;
-        }
-        .pc-greeting {
-            font-size: 13px; color: var(--text-38);
-            font-weight: 500; margin-bottom: 2px;
-        }
-        .pc-name {
-            font-size: 22px; font-weight: 800;
-            letter-spacing: -0.5px; margin-bottom: 16px;
-        }
-        /* Glass card inside phone */
-        .pc-card {
-            background: linear-gradient(180deg, var(--card-top), var(--card-bot));
-            border: 1px solid var(--border);
-            border-radius: var(--r-md);
-            padding: 16px;
-            box-shadow: 0 2px 8px var(--shadow);
-            margin-bottom: 10px;
-        }
-        .pc-card-head {
-            display: flex; align-items: center; justify-content: space-between;
-            margin-bottom: 12px;
-        }
-        .pc-card-title { font-size: 11px; font-weight: 600; color: var(--text-38); text-transform: uppercase; letter-spacing: 0.5px; }
-        .pc-card-badge {
-            font-size: 10px; font-weight: 700; color: var(--blue);
-            background: var(--blue-light); padding: 2px 8px;
-            border-radius: 100px;
-        }
-        .pc-drill {
-            display: flex; align-items: center; gap: 10px;
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(0,0,0,0.04);
-        }
-        .pc-drill:last-child { border-bottom: none; padding-bottom: 0; }
-        .pc-drill-num {
-            width: 26px; height: 26px; border-radius: 7px;
-            background: var(--blue-light); color: var(--blue);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 11px; font-weight: 800; flex-shrink: 0;
-        }
-        .pc-drill-name { font-size: 13px; font-weight: 600; flex: 1; }
-        .pc-drill-time { font-size: 11px; color: var(--text-38); font-weight: 500; }
-
-        /* Stats card */
-        .pc-stats {
-            display: grid; grid-template-columns: 1fr 1fr 1fr;
-            gap: 8px;
-        }
-        .pc-stat {
-            background: linear-gradient(180deg, var(--card-top), var(--card-bot));
-            border: 1px solid var(--border);
-            border-radius: var(--r-sm);
-            padding: 10px 8px; text-align: center;
-            box-shadow: 0 1px 4px var(--shadow);
-        }
-        .pc-stat-val { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
-        .pc-stat-val.blue { color: var(--blue); }
-        .pc-stat-val.green { color: var(--green); }
-        .pc-stat-val.gold { color: var(--gold); }
-        .pc-stat-label { font-size: 10px; color: var(--text-38); font-weight: 500; margin-top: 2px; }
-
-        .pc-bottom { margin-top: auto; }
-        .pc-btn {
-            width: 100%; padding: 12px;
-            background: var(--green); color: var(--white);
-            border: none; border-radius: var(--r-sm);
-            font-size: 14px; font-weight: 700;
-            text-align: center;
-        }
-
-        /* ===== FEATURES ===== */
-        .features {
-            padding: clamp(60px, 8vw, 120px) clamp(20px, 4vw, 48px);
-            max-width: 1100px; margin: 0 auto;
-        }
-        .feat-head { max-width: 420px; margin-bottom: clamp(40px, 5vw, 64px); }
-        .s-tag {
-            font-size: 12px; font-weight: 600; color: var(--blue);
-            letter-spacing: 1px; text-transform: uppercase;
-            margin-bottom: 12px;
-        }
-        .feat-head h2 {
-            font-size: clamp(28px, 3.5vw, 40px);
-            font-weight: 800; letter-spacing: -1px;
-            line-height: 1.1; margin-bottom: 12px;
-        }
-        .feat-head p { font-size: 15px; color: var(--text-60); line-height: 1.7; }
-
-        .feat-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-        }
-        .feat-card {
-            background: linear-gradient(180deg, var(--card-top), var(--card-bot));
-            border: 1px solid var(--border);
-            border-radius: var(--r-md);
-            padding: clamp(24px, 3vw, 32px);
-            box-shadow: 0 2px 8px var(--shadow);
-            transition: transform 0.3s cubic-bezier(0.16,1,0.3,1);
-        }
-        .feat-card:hover { transform: translateY(-4px); }
-        .feat-icon {
-            width: 40px; height: 40px; border-radius: 10px;
-            background: var(--blue-light);
-            display: flex; align-items: center; justify-content: center;
-            margin-bottom: 16px;
-        }
-        .feat-icon svg { width: 20px; height: 20px; color: var(--blue); }
-        .feat-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
-        .feat-card p { font-size: 14px; color: var(--text-60); line-height: 1.65; }
-
-        /* ===== HOW ===== */
-        .how {
-            padding: clamp(60px, 8vw, 120px) clamp(20px, 4vw, 48px);
-            background: rgba(74,140,181,0.03);
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-        }
-        .how-inner {
-            max-width: 1100px; margin: 0 auto;
-            display: grid; grid-template-columns: 1fr 2fr;
-            gap: clamp(40px, 5vw, 80px); align-items: start;
-        }
-        .how-head h2 {
-            font-size: clamp(28px, 3.5vw, 40px);
-            font-weight: 800; letter-spacing: -1px; line-height: 1.1;
-        }
-        .how-steps { display: flex; flex-direction: column; }
-        .how-step {
-            display: grid; grid-template-columns: 44px 1fr;
-            gap: 16px; align-items: start;
-            padding: clamp(20px, 2.5vw, 28px) 0;
-            border-bottom: 1px solid var(--border);
-        }
-        .how-step:last-child { border-bottom: none; }
-        .step-circle {
-            width: 36px; height: 36px; border-radius: 10px;
-            background: var(--blue-light); color: var(--blue);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 15px; font-weight: 800;
-        }
-        .how-step h3 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
-        .how-step p { font-size: 14px; color: var(--text-60); line-height: 1.65; }
-
-        /* ===== CTA ===== */
-        .cta {
-            padding: clamp(80px, 10vw, 140px) clamp(20px, 4vw, 48px);
-            text-align: center;
-        }
-        .cta-inner { max-width: 480px; margin: 0 auto; }
-        .cta h2 {
-            font-size: clamp(28px, 4vw, 44px);
-            font-weight: 800; letter-spacing: -1.2px;
-            line-height: 1.1; margin-bottom: 14px;
-        }
-        .cta h2 .accent { color: var(--blue); }
-        .cta p {
-            font-size: 16px; color: var(--text-60);
-            line-height: 1.7; margin-bottom: 28px;
-        }
-
-        /* ===== FOOTER ===== */
-        footer {
-            border-top: 1px solid var(--border);
-            padding: 24px clamp(20px, 4vw, 48px);
-        }
-        .foot-inner {
-            max-width: 1100px; margin: 0 auto;
-            display: flex; align-items: center; justify-content: space-between;
-        }
-        .foot-copy { font-size: 12px; color: var(--text-38); }
-        .foot-links { display: flex; gap: 20px; }
-        .foot-links a {
-            font-size: 12px; color: var(--text-38);
-            text-decoration: none; transition: color 0.15s;
-        }
-        .foot-links a:hover { color: var(--text-60); }
-
-        /* ===== REVEAL ===== */
-        .sr {
-            opacity: 0; transform: translateY(16px);
-            transition: opacity 0.6s cubic-bezier(0.16,1,0.3,1), transform 0.6s cubic-bezier(0.16,1,0.3,1);
-        }
-        .sr.vis { opacity: 1; transform: none; }
-        .d1 { transition-delay: 0.06s; }
-        .d2 { transition-delay: 0.12s; }
-        .d3 { transition-delay: 0.18s; }
-
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: 0.01ms !important;
-                transition-duration: 0.01ms !important;
-            }
-        }
-
-        @media (max-width: 860px) {
-            .hero-inner { grid-template-columns: 1fr; text-align: center; }
-            .hero-text { max-width: 100%; margin: 0 auto; }
-            .hero-body { margin-left: auto; margin-right: auto; }
-            .hero-actions { justify-content: center; }
-            .hero-phone { order: -1; }
-            .phone { width: 240px; }
-            .feat-grid { grid-template-columns: 1fr; max-width: 380px; margin: 0 auto; }
-            .how-inner { grid-template-columns: 1fr; }
-        }
-        @media (max-width: 480px) {
-            .nav-links a:not(.nav-cta) { display: none; }
-            .hero h1 { font-size: 32px; }
-            .foot-inner { flex-direction: column; gap: 10px; text-align: center; }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1440">
+  <title>Baller — Outwork. Out-train. Outscore.</title>
+  <meta name="description" content="AI training. Voice coaching. Adaptive plans. For players who already know what hard work feels like.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,700;0,9..144,900;1,9..144,700;1,9..144,900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+<div class="canvas">
 
-<div class="ambient" aria-hidden="true">
-    <div class="glow glow-1"></div>
-    <div class="glow glow-2"></div>
-    <div class="glow glow-3"></div>
+  <!-- ===================== NAV ===================== -->
+  <nav class="nav">
+    <div class="nav__brand">
+      <img src="assets/baller-logo.png" alt="" class="nav__logo">
+      <span class="nav__wordmark">BALLER</span>
+    </div>
+    <div class="nav__links">
+      <a href="#features" class="nav__link">Features</a>
+      <a href="#method" class="nav__link">Method</a>
+      <a href="#pricing" class="nav__link">Pricing</a>
+      <a href="#signin" class="nav__link">Sign in</a>
+      <a href="#cta" class="nav__cta">Get the app</a>
+    </div>
+  </nav>
+
+  <!-- ===================== HERO ===================== -->
+  <section class="hero">
+    <div class="beams">
+      <!-- Wide atmospheric base bloom -->
+      <div class="bloom" style="left:200px;top:-200px;width:1600px;height:1400px;background:radial-gradient(ellipse at 60% 50%, rgba(74,140,181,0.32) 0%, transparent 65%);filter:blur(30px)"></div>
+
+      <!-- Concentrated phone-side bloom -->
+      <div class="bloom" style="left:600px;top:50px;width:900px;height:900px;background:radial-gradient(circle, rgba(74,140,181,0.50) 0%, transparent 60%);filter:blur(25px)"></div>
+      <div class="bloom" style="left:780px;top:200px;width:560px;height:560px;background:radial-gradient(circle, rgba(127,181,217,0.55) 0%, transparent 60%);filter:blur(20px)"></div>
+
+      <!-- Diagonal light shafts — fanning from upper-right down to lower-left -->
+      <!-- Far left subtle -->
+      <div class="shaft" style="left:-100px;top:-900px;width:300px;height:2800px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.10) 50%, transparent 100%);filter:blur(90px);transform:rotate(-26deg)"></div>
+      <!-- Mid left soft -->
+      <div class="shaft" style="left:200px;top:-900px;width:340px;height:2800px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.16) 50%, transparent 100%);filter:blur(80px);transform:rotate(-25deg)"></div>
+      <!-- Center soft wide -->
+      <div class="shaft" style="left:450px;top:-900px;width:380px;height:2800px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.22) 50%, transparent 100%);filter:blur(70px);transform:rotate(-23deg)"></div>
+      <!-- Center bright -->
+      <div class="shaft" style="left:680px;top:-900px;width:220px;height:2800px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.34) 50%, transparent 100%);filter:blur(45px);transform:rotate(-22deg)"></div>
+      <!-- Brightest core shaft -->
+      <div class="shaft" style="left:870px;top:-900px;width:130px;height:2800px;background:linear-gradient(90deg, transparent 0%, rgba(184,216,232,0.50) 50%, transparent 100%);filter:blur(28px);transform:rotate(-22deg)"></div>
+      <!-- Sharp highlight ray -->
+      <div class="shaft" style="left:1020px;top:-900px;width:70px;height:2800px;background:linear-gradient(90deg, transparent 0%, rgba(184,216,232,0.60) 50%, transparent 100%);filter:blur(18px);transform:rotate(-22deg)"></div>
+      <!-- Right of phone medium -->
+      <div class="shaft" style="left:1140px;top:-900px;width:170px;height:2800px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.32) 50%, transparent 100%);filter:blur(45px);transform:rotate(-21deg)"></div>
+      <!-- Far right wide -->
+      <div class="shaft" style="left:1320px;top:-800px;width:280px;height:2700px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.20) 50%, transparent 100%);filter:blur(70px);transform:rotate(-20deg)"></div>
+      <!-- Very far right faint -->
+      <div class="shaft" style="left:1560px;top:-700px;width:200px;height:2500px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.14) 50%, transparent 100%);filter:blur(80px);transform:rotate(-19deg)"></div>
+    </div>
+
+    <div class="hero__left">
+      <div class="hero__eyebrow"></div>
+      <h1 class="hero__title">Outwork.<br><em class="italic-emphasis">Out-train.</em><br>Outscore.</h1>
+      <p class="hero__subtitle">AI training. Voice coaching. Adaptive plans. For players who already know what hard work feels like.</p>
+      <a href="#cta" class="btn btn--primary hero__cta">Get the app</a>
+    </div>
+
+    <div class="phone phone--hero">
+      <div class="phone__screen">
+        <div class="phone__island"></div>
+        <span class="phone__time">9:41</span>
+        <span class="phone__eyebrow">TODAY</span>
+        <h3 class="phone__title">Today's Training</h3>
+        <div class="phone__ring">
+          <div class="phone__ring-inner"></div>
+          <span class="phone__ring-pct">72%</span>
+          <span class="phone__ring-label">OF GOAL</span>
+        </div>
+        <div class="phone__drill" style="top:372px">
+          <span class="phone__drill-dot"></span>
+          <span class="phone__drill-name">Form shooting</span>
+          <span class="phone__drill-meta">5 sets · 10 reps</span>
+          <span class="phone__drill-state phone__drill-state--done">DONE</span>
+        </div>
+        <div class="phone__drill" style="top:434px">
+          <span class="phone__drill-dot"></span>
+          <span class="phone__drill-name">Cone dribble drill</span>
+          <span class="phone__drill-meta">3 sets · 60 sec</span>
+          <span class="phone__drill-state phone__drill-state--done">DONE</span>
+        </div>
+        <div class="phone__drill" style="top:496px">
+          <span class="phone__drill-dot"></span>
+          <span class="phone__drill-name">Pull-up jumpers</span>
+          <span class="phone__drill-meta">4 sets · 8 reps</span>
+          <span class="phone__drill-state">GO</span>
+        </div>
+        <div class="phone__drill" style="top:558px">
+          <span class="phone__drill-dot"></span>
+          <span class="phone__drill-name">Free throw routine</span>
+          <span class="phone__drill-meta">2 sets · 25 reps</span>
+          <span class="phone__drill-state">GO</span>
+        </div>
+        <div class="phone__start-btn">Start Session</div>
+      </div>
+    </div>
+
+    <span class="hero__scroll">SCROLL ↓</span>
+  </section>
+
+  <!-- ===================== TRUST STRIP ===================== -->
+  <section class="trust">
+    <span class="trust__label">BUILT FOR PLAYERS IN</span>
+    <div class="trust__cities">
+      <span>LOS ANGELES</span>
+      <span>NEW YORK</span>
+      <span>TORONTO</span>
+      <span>CHICAGO</span>
+      <span>HOUSTON</span>
+      <span>MIAMI</span>
+      <span>SEATTLE</span>
+      <span>BEIJING</span>
+      <span>SHANGHAI</span>
+    </div>
+  </section>
+
+  <!-- ===================== FEATURES ===================== -->
+  <section class="features" id="features">
+    <div class="beams">
+      <div class="bloom" style="left:200px;top:100px;width:1400px;height:1400px;background:radial-gradient(ellipse at 60% 50%, rgba(74,140,181,0.30) 0%, transparent 65%);filter:blur(30px)"></div>
+      <div class="bloom" style="left:600px;top:300px;width:900px;height:900px;background:radial-gradient(circle, rgba(74,140,181,0.40) 0%, transparent 60%);filter:blur(25px)"></div>
+      <div class="shaft" style="left:200px;top:-1000px;width:340px;height:3300px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.14) 50%, transparent 100%);filter:blur(80px);transform:rotate(-22deg)"></div>
+      <div class="shaft" style="left:500px;top:-1000px;width:280px;height:3300px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.20) 50%, transparent 100%);filter:blur(60px);transform:rotate(-22deg)"></div>
+      <div class="shaft" style="left:780px;top:-1000px;width:160px;height:3300px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.26) 50%, transparent 100%);filter:blur(50px);transform:rotate(-21deg)"></div>
+      <div class="shaft" style="left:1000px;top:-1000px;width:240px;height:3300px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.18) 50%, transparent 100%);filter:blur(60px);transform:rotate(-23deg)"></div>
+      <div class="shaft" style="left:1280px;top:-900px;width:300px;height:3200px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.14) 50%, transparent 100%);filter:blur(75px);transform:rotate(-20deg)"></div>
+    </div>
+    <div class="features__header">
+      <span class="eyebrow">01 / THE METHOD</span>
+      <h2 class="display">Six tools. <em class="italic-emphasis">One system.</em></h2>
+      <p class="lead">No fluff. No filler features. Every tool earns its place — built around the way real players actually train.</p>
+    </div>
+
+    <article class="feat feat--01">
+      <div class="feat__rule"></div>
+      <span class="feat__label">FEATURE 01 · AI COACH</span>
+      <span class="feat__num">01</span>
+      <h3 class="feat__title">A coach that knows your game.</h3>
+      <p class="feat__body">Adaptive plans that learn your strengths, your weak spots, and the work you avoid. Then it makes you do the work you avoid.</p>
+    </article>
+
+    <article class="feat feat--02">
+      <div class="feat__rule"></div>
+      <span class="feat__label">FEATURE 02 · VOICE</span>
+      <span class="feat__num">02</span>
+      <h3 class="feat__title">Hands-free voice coach.</h3>
+      <p class="feat__body">Real-time form cues, set timers, and tempo callouts — without ever looking at your phone.</p>
+    </article>
+
+    <article class="feat feat--03">
+      <div class="feat__rule"></div>
+      <span class="feat__label">FEATURE 03 · PLANS</span>
+      <span class="feat__num">03</span>
+      <h3 class="feat__title">Plans that breathe.</h3>
+      <p class="feat__body">Hard days, easy days, and rest — programmed like a real strength coach would.</p>
+    </article>
+
+    <article class="feat feat--04">
+      <div class="feat__rule"></div>
+      <span class="feat__label">FEATURE 04 · DRILLS</span>
+      <span class="feat__num">04</span>
+      <h3 class="feat__title">500+ drills, library deep.</h3>
+      <p class="feat__body">Pulled from college and pro programs. Filmed, captioned, scored.</p>
+    </article>
+
+    <article class="feat feat--05">
+      <div class="feat__rule"></div>
+      <span class="feat__label">FEATURE 05 · PROGRESS</span>
+      <span class="feat__num">05</span>
+      <h3 class="feat__title">Progress in motion.</h3>
+      <p class="feat__body">Track shots made, reps logged, streaks held. Numbers that mean something.</p>
+    </article>
+
+    <article class="feat feat--06">
+      <div class="feat__rule"></div>
+      <span class="feat__label">FEATURE 06 · REMINDERS</span>
+      <span class="feat__num">06</span>
+      <h3 class="feat__title">Reminders that hit like a friend, not a notification.</h3>
+      <p class="feat__body">Short messages, the right tone, the right time. No spam.</p>
+    </article>
+  </section>
+
+  <!-- ===================== APP PREVIEW ===================== -->
+  <section class="app-preview">
+    <div class="beams">
+      <div class="bloom" style="left:0;top:100px;width:1600px;height:1200px;background:radial-gradient(ellipse at 50% 60%, rgba(74,140,181,0.40) 0%, transparent 60%);filter:blur(30px)"></div>
+      <div class="bloom" style="left:300px;top:300px;width:900px;height:900px;background:radial-gradient(circle, rgba(74,140,181,0.45) 0%, transparent 60%);filter:blur(25px)"></div>
+      <div class="bloom" style="left:550px;top:450px;width:500px;height:500px;background:radial-gradient(circle, rgba(127,181,217,0.40) 0%, transparent 60%);filter:blur(20px)"></div>
+      <div class="shaft" style="left:100px;top:-900px;width:320px;height:2900px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.16) 50%, transparent 100%);filter:blur(80px);transform:rotate(-22deg)"></div>
+      <div class="shaft" style="left:380px;top:-900px;width:280px;height:2900px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.22) 50%, transparent 100%);filter:blur(60px);transform:rotate(-23deg)"></div>
+      <div class="shaft" style="left:620px;top:-900px;width:200px;height:2900px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.30) 50%, transparent 100%);filter:blur(50px);transform:rotate(-22deg)"></div>
+      <div class="shaft" style="left:830px;top:-900px;width:140px;height:2900px;background:linear-gradient(90deg, transparent 0%, rgba(184,216,232,0.34) 50%, transparent 100%);filter:blur(40px);transform:rotate(-22deg)"></div>
+      <div class="shaft" style="left:980px;top:-900px;width:200px;height:2900px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.26) 50%, transparent 100%);filter:blur(50px);transform:rotate(-21deg)"></div>
+      <div class="shaft" style="left:1190px;top:-900px;width:280px;height:2900px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.18) 50%, transparent 100%);filter:blur(60px);transform:rotate(-22deg)"></div>
+    </div>
+    <div class="app-preview__header">
+      <span class="eyebrow">02 / THE PRODUCT</span>
+      <h2 class="display">Inside the app.</h2>
+      <p class="lead">Three screens. One purpose: get you better, faster, every session.</p>
+    </div>
+
+    <!-- Phone 1: Today's Plan -->
+    <div class="phone phone--app1">
+      <div class="phone__screen">
+        <div class="phone__island"></div>
+        <span class="phone__time">9:41</span>
+        <span class="phone__eyebrow">TODAY</span>
+        <h3 class="phone__title">Today's Plan.</h3>
+        <span class="ap__progress-label">4 OF 6 DRILLS</span>
+        <div class="ap__progress-track"></div>
+        <div class="ap__progress-fill"></div>
+        <div class="ap__row" style="top:248px"><span class="ap__dot"></span><span class="ap__name">Form shooting</span><span class="ap__meta">5 × 10</span></div>
+        <div class="ap__row" style="top:304px"><span class="ap__dot"></span><span class="ap__name">Cone dribble</span><span class="ap__meta">3 × 60s</span></div>
+        <div class="ap__row" style="top:360px"><span class="ap__dot"></span><span class="ap__name">Pull-up jumpers</span><span class="ap__meta">4 × 8</span></div>
+        <div class="ap__row" style="top:416px"><span class="ap__dot"></span><span class="ap__name">Free throws</span><span class="ap__meta">2 × 25</span></div>
+        <div class="ap__row" style="top:472px"><span class="ap__dot"></span><span class="ap__name">Defensive slides</span><span class="ap__meta">5 × 30s</span></div>
+        <div class="ap__row" style="top:528px"><span class="ap__dot"></span><span class="ap__name">Cool down</span><span class="ap__meta">5 min</span></div>
+      </div>
+    </div>
+
+    <!-- Phone 2: Voice Coach -->
+    <div class="phone phone--app2">
+      <div class="phone__screen">
+        <div class="phone__island"></div>
+        <span class="phone__time">9:41</span>
+        <span class="phone__eyebrow">VOICE COACH</span>
+        <h3 class="phone__title">Listening…</h3>
+        <div class="vc__ring vc__ring--1"></div>
+        <div class="vc__ring vc__ring--2"></div>
+        <div class="vc__ring vc__ring--3"></div>
+        <div class="vc__ring vc__ring--4"></div>
+        <div class="vc__ring vc__ring--5"></div>
+        <div class="vc__core"></div>
+        <div class="vc__waveform">
+          <span style="height:10px"></span><span style="height:22px"></span><span style="height:34px"></span><span style="height:18px"></span><span style="height:28px"></span><span style="height:42px"></span><span style="height:30px"></span><span style="height:16px"></span><span style="height:24px"></span><span style="height:38px"></span><span style="height:26px"></span><span style="height:14px"></span><span style="height:22px"></span><span style="height:10px"></span>
+        </div>
+        <div class="vc__quote">
+          <span class="vc__quote-label">COACH</span>
+          <p class="vc__quote-text">Bend your knees on the catch. Good — three more reps.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phone 3: Progress -->
+    <div class="phone phone--app3">
+      <div class="phone__screen">
+        <div class="phone__island"></div>
+        <span class="phone__time">9:41</span>
+        <span class="phone__eyebrow">THIS WEEK</span>
+        <h3 class="phone__title">Progress.</h3>
+        <div class="pg__streak">
+          <span class="pg__streak-label">CURRENT STREAK</span>
+          <span class="pg__streak-num">17 days</span>
+        </div>
+        <span class="pg__chart-label">MINUTES TRAINED</span>
+        <div class="pg__bars">
+          <div class="pg__bar" style="height:86px"></div>
+          <div class="pg__bar" style="height:118px"></div>
+          <div class="pg__bar" style="height:74px"></div>
+          <div class="pg__bar" style="height:130px"></div>
+          <div class="pg__bar" style="height:102px"></div>
+          <div class="pg__bar" style="height:146px"></div>
+          <div class="pg__bar" style="height:98px"></div>
+        </div>
+        <div class="pg__bar-labels">
+          <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span>
+        </div>
+        <div class="pg__stats">
+          <div class="pg__stat">
+            <span class="pg__stat-label">SHOTS MADE</span>
+            <span class="pg__stat-num">1,284</span>
+          </div>
+          <div class="pg__stat" style="left:160px">
+            <span class="pg__stat-label">ACCURACY</span>
+            <span class="pg__stat-num pg__stat-num--ocean">64%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== HOW IT WORKS ===================== -->
+  <section class="how">
+    <div class="beams">
+      <div class="bloom" style="left:200px;top:200px;width:1400px;height:1400px;background:radial-gradient(ellipse at 50% 50%, rgba(74,140,181,0.22) 0%, transparent 65%);filter:blur(40px)"></div>
+      <div class="bloom" style="left:200px;top:1000px;width:1400px;height:1200px;background:radial-gradient(ellipse at 50% 50%, rgba(74,140,181,0.18) 0%, transparent 65%);filter:blur(40px)"></div>
+      <div class="shaft" style="left:200px;top:-1200px;width:380px;height:4000px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.12) 50%, transparent 100%);filter:blur(90px);transform:rotate(-22deg)"></div>
+      <div class="shaft" style="left:500px;top:-1200px;width:260px;height:4000px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.18) 50%, transparent 100%);filter:blur(60px);transform:rotate(-22deg)"></div>
+      <div class="shaft" style="left:760px;top:-1200px;width:200px;height:4000px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.22) 50%, transparent 100%);filter:blur(55px);transform:rotate(-21deg)"></div>
+      <div class="shaft" style="left:980px;top:-1200px;width:240px;height:4000px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.18) 50%, transparent 100%);filter:blur(60px);transform:rotate(-22deg)"></div>
+      <div class="shaft" style="left:1240px;top:-1200px;width:340px;height:4000px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.12) 50%, transparent 100%);filter:blur(80px);transform:rotate(-21deg)"></div>
+    </div>
+    <div class="how__header">
+      <span class="eyebrow">03 / THE RITUAL</span>
+      <h2 class="display">One minute.<br><em class="italic-emphasis">Then the work.</em></h2>
+      <p class="lead">Three steps to get rolling. After that, just lace up and show up.</p>
+    </div>
+    <div class="how__divider" style="top:360px"></div>
+
+    <div class="how__step" style="top:420px">
+      <span class="how__numeral">I</span>
+      <div class="how__text">
+        <span class="how__label">STEP ONE</span>
+        <h3 class="how__title">Tell us where your body is today.</h3>
+        <p class="how__body">One minute. A few quick questions — how your legs feel, what hurt yesterday, what to fix today. We listen, then we build.</p>
+      </div>
+      <div class="phone phone--how">
+        <div class="phone__screen">
+          <span class="how__phone-time">9:41</span>
+          <span class="how__phone-eyebrow">QUICK CHECK-IN</span>
+          <h4 class="how__phone-title">How are you?</h4>
+          <div class="how__phone-card" style="top:96px">
+            <span class="how__phone-card-label">LEGS FEEL?</span>
+            <span class="how__phone-card-value">Fresh</span>
+          </div>
+          <div class="how__phone-card" style="top:148px">
+            <span class="how__phone-card-label">LAST SESSION</span>
+            <span class="how__phone-card-value">Yesterday · 12 min</span>
+          </div>
+          <div class="how__phone-card" style="top:200px">
+            <span class="how__phone-card-label">TODAY'S FOCUS</span>
+            <span class="how__phone-card-value">Pull-up jumpers</span>
+          </div>
+          <div class="how__phone-btn">Submit</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="how__divider" style="top:800px"></div>
+
+    <div class="how__step" style="top:840px">
+      <span class="how__numeral how__numeral--ii">II</span>
+      <div class="how__text">
+        <span class="how__label">STEP TWO</span>
+        <h3 class="how__title">Follow the plan we built for you.</h3>
+        <p class="how__body">A daily session, programmed by the same logic college coaches use. Drills with intention. Reps that matter. No filler, no guesswork.</p>
+      </div>
+      <div class="phone phone--how">
+        <div class="phone__screen">
+          <span class="how__phone-time">9:41</span>
+          <span class="how__phone-eyebrow">TODAY'S SESSION</span>
+          <h4 class="how__phone-title">Drill 3 of 6</h4>
+          <div class="how__phone-card how__phone-card--big">
+            <span class="how__phone-card-label">PULL-UP JUMPERS</span>
+            <span class="how__phone-card-time">0:32</span>
+            <span class="how__phone-card-meta">of 1:00</span>
+            <div class="how__phone-track"></div>
+            <div class="how__phone-fill"></div>
+            <span class="how__phone-set">Set 2 of 4</span>
+          </div>
+          <div class="how__phone-btn how__phone-btn--small">Pause</div>
+          <div class="how__phone-btn how__phone-btn--small how__phone-btn--right">Skip</div>
+          <div class="how__phone-btn">Mark complete</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="how__divider" style="top:1220px"></div>
+
+    <div class="how__step" style="top:1260px">
+      <span class="how__numeral how__numeral--iii">III</span>
+      <div class="how__text how__text--iii">
+        <span class="how__label">STEP THREE</span>
+        <h3 class="how__title">One line. Then you're out.</h3>
+        <p class="how__body">Quick honest check-in at the end. Numbers logged, streak protected, tomorrow already cooking. Clean, no friction, on to the rest of your day.</p>
+      </div>
+      <div class="phone phone--how">
+        <div class="phone__screen">
+          <span class="how__phone-time">9:41</span>
+          <span class="how__phone-eyebrow">SESSION COMPLETE</span>
+          <h4 class="how__phone-title how__phone-title--big">Done.</h4>
+          <div class="how__phone-card" style="top:134px;height:44px">
+            <span class="how__phone-card-label">COMPLETED</span>
+            <span class="how__phone-card-value">100%</span>
+          </div>
+          <div class="how__phone-mini">
+            <span class="how__phone-mini-label">REPS</span>
+            <span class="how__phone-mini-val">48</span>
+          </div>
+          <div class="how__phone-mini" style="left:84px">
+            <span class="how__phone-mini-label">TIME</span>
+            <span class="how__phone-mini-val">12 min</span>
+          </div>
+          <div class="how__phone-card" style="top:234px;height:44px">
+            <span class="how__phone-card-label">STREAK</span>
+            <span class="how__phone-card-value">17 days</span>
+          </div>
+          <div class="how__phone-btn">Save &amp; exit</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="how__divider" style="top:1640px"></div>
+  </section>
+
+  <!-- ===================== PRICING ===================== -->
+  <section class="pricing" id="pricing">
+    <div class="beams">
+      <div class="bloom" style="left:300px;top:200px;width:1400px;height:1200px;background:radial-gradient(ellipse at 65% 50%, rgba(74,140,181,0.34) 0%, transparent 65%);filter:blur(30px)"></div>
+      <div class="bloom" style="left:700px;top:350px;width:900px;height:900px;background:radial-gradient(circle, rgba(74,140,181,0.50) 0%, transparent 60%);filter:blur(25px)"></div>
+      <div class="bloom" style="left:850px;top:450px;width:500px;height:500px;background:radial-gradient(circle, rgba(127,181,217,0.40) 0%, transparent 60%);filter:blur(20px)"></div>
+      <div class="shaft" style="left:200px;top:-900px;width:280px;height:2900px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.10) 50%, transparent 100%);filter:blur(80px);transform:rotate(-22deg)"></div>
+      <div class="shaft" style="left:480px;top:-900px;width:240px;height:2900px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.16) 50%, transparent 100%);filter:blur(60px);transform:rotate(-22deg)"></div>
+      <div class="shaft" style="left:720px;top:-900px;width:200px;height:2900px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.24) 50%, transparent 100%);filter:blur(50px);transform:rotate(-22deg)"></div>
+      <div class="shaft" style="left:920px;top:-900px;width:160px;height:2900px;background:linear-gradient(90deg, transparent 0%, rgba(184,216,232,0.34) 50%, transparent 100%);filter:blur(40px);transform:rotate(-22deg)"></div>
+      <div class="shaft" style="left:1100px;top:-900px;width:200px;height:2900px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.24) 50%, transparent 100%);filter:blur(50px);transform:rotate(-21deg)"></div>
+      <div class="shaft" style="left:1320px;top:-900px;width:280px;height:2900px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.16) 50%, transparent 100%);filter:blur(70px);transform:rotate(-20deg)"></div>
+    </div>
+    <div class="pricing__header">
+      <span class="eyebrow">04 / THE TERMS</span>
+      <h2 class="display">Pick your line.</h2>
+      <p class="lead">Free to start. Pro when you're ready to go all in. Cancel anytime.</p>
+    </div>
+
+    <article class="plan plan--free">
+      <div class="plan__rule"></div>
+      <span class="plan__label">FREE · START HERE</span>
+      <div class="plan__price">$0</div>
+      <span class="plan__price-meta">forever — no card needed</span>
+      <ul class="plan__features">
+        <li>Daily training plan</li>
+        <li>Drill library access</li>
+        <li>Basic progress tracking</li>
+        <li>One device</li>
+      </ul>
+      <a href="#start" class="btn btn--secondary plan__cta">Start free</a>
+    </article>
+
+    <article class="plan plan--monthly">
+      <div class="plan__rule"></div>
+      <span class="plan__label">PRO MONTHLY</span>
+      <div class="plan__price">$19.99</div>
+      <span class="plan__price-meta">per month · billed monthly</span>
+      <ul class="plan__features">
+        <li>Everything in Free</li>
+        <li>Hands-free voice coach</li>
+        <li>AI adaptive plans</li>
+        <li>Form analysis &amp; feedback</li>
+        <li>Unlimited drill library</li>
+        <li>Streak rescue &amp; reminders</li>
+        <li>Multi-device sync</li>
+      </ul>
+      <a href="#monthly" class="btn btn--secondary plan__cta">Get the app</a>
+    </article>
+
+    <article class="plan plan--annual">
+      <div class="plan__rule"></div>
+      <span class="plan__label">PRO ANNUAL · BEST VALUE</span>
+      <div class="plan__price">$99</div>
+      <span class="plan__price-meta">per year · save 58% vs monthly · works out to $8.25/month</span>
+      <ul class="plan__features">
+        <li>Everything in Free</li>
+        <li>Hands-free voice coach</li>
+        <li>AI adaptive plans</li>
+        <li>Form analysis &amp; feedback</li>
+        <li>Unlimited drill library</li>
+        <li>Streak rescue &amp; reminders</li>
+        <li>Multi-device sync</li>
+      </ul>
+      <a href="#annual" class="btn btn--primary plan__cta">Get the app</a>
+    </article>
+
+    <p class="pricing__fineprint">Cancel anytime. Taxes where applicable.</p>
+  </section>
+
+  <!-- ===================== FINAL CTA ===================== -->
+  <section class="final-cta">
+    <div class="beams">
+      <div class="bloom" style="left:120px;top:-200px;width:1200px;height:1200px;background:radial-gradient(circle at 50% 50%, rgba(74,140,181,0.55) 0%, transparent 60%);filter:blur(30px)"></div>
+      <div class="bloom" style="left:320px;top:-50px;width:800px;height:800px;background:radial-gradient(circle, rgba(74,140,181,0.65) 0%, transparent 58%);filter:blur(25px)"></div>
+      <div class="bloom" style="left:470px;top:80px;width:500px;height:500px;background:radial-gradient(circle, rgba(127,181,217,0.55) 0%, transparent 60%);filter:blur(20px)"></div>
+      <div class="shaft" style="left:-100px;top:-800px;width:380px;height:2500px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.16) 50%, transparent 100%);filter:blur(80px);transform:rotate(-22deg)"></div>
+      <div class="shaft" style="left:200px;top:-800px;width:280px;height:2500px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.24) 50%, transparent 100%);filter:blur(55px);transform:rotate(-22deg)"></div>
+      <div class="shaft" style="left:460px;top:-800px;width:220px;height:2500px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.30) 50%, transparent 100%);filter:blur(45px);transform:rotate(-22deg)"></div>
+      <div class="shaft" style="left:660px;top:-800px;width:160px;height:2500px;background:linear-gradient(90deg, transparent 0%, rgba(184,216,232,0.36) 50%, transparent 100%);filter:blur(35px);transform:rotate(-22deg)"></div>
+      <div class="shaft" style="left:830px;top:-800px;width:220px;height:2500px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.30) 50%, transparent 100%);filter:blur(45px);transform:rotate(-22deg)"></div>
+      <div class="shaft" style="left:1060px;top:-800px;width:280px;height:2500px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.22) 50%, transparent 100%);filter:blur(55px);transform:rotate(-22deg)"></div>
+      <div class="shaft" style="left:1340px;top:-800px;width:340px;height:2500px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.14) 50%, transparent 100%);filter:blur(75px);transform:rotate(-22deg)"></div>
+    </div>
+    <div class="final-cta__chip">
+      <span class="final-cta__dot"></span>
+      BALLER METHOD
+    </div>
+    <h2 class="final-cta__title">Lace up.</h2>
+    <p class="final-cta__sub">The court is open. Step on it.</p>
+    <a href="#cta" class="btn btn--primary final-cta__btn">Get the app</a>
+  </section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="footer">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <img src="assets/baller-logo.png" alt="" class="footer__logo">
+        <span class="footer__wordmark">BALLER</span>
+        <p class="footer__tagline">AI training built for serious players.</p>
+      </div>
+      <div class="footer__cols">
+        <div class="footer__col">
+          <span class="footer__col-title">PRODUCT</span>
+          <a href="#features">Features</a>
+          <a href="#method">Method</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#download">Download</a>
+        </div>
+        <div class="footer__col">
+          <span class="footer__col-title">RESOURCES</span>
+          <a href="#drills">Drill library</a>
+          <a href="#journal">Player journal</a>
+          <a href="#guides">Coach guides</a>
+          <a href="#help">Help</a>
+        </div>
+        <div class="footer__col">
+          <span class="footer__col-title">COMPANY</span>
+          <a href="#about">About</a>
+          <a href="#press">Press</a>
+          <a href="#careers">Careers</a>
+          <a href="#contact">Contact</a>
+        </div>
+        <div class="footer__col">
+          <span class="footer__col-title">LEGAL</span>
+          <a href="privacy.html">Privacy</a>
+          <a href="terms.html">Terms</a>
+          <a href="privacy.html#cookies">Cookies</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span class="footer__copy">© 2026 Baller · Vancouver · Beijing</span>
+      <div class="footer__socials">
+        <a href="#instagram">INSTAGRAM</a>
+        <a href="#tiktok">TIKTOK</a>
+        <a href="#youtube">YOUTUBE</a>
+        <a href="#x">X</a>
+      </div>
+    </div>
+  </footer>
+
 </div>
-
-<nav>
-    <a href="/" class="nav-brand">
-        <div class="nav-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 3c0 0-4 4-4 9s4 9 4 9"/><path d="M12 3c0 0 4 4 4 9s-4 9-4 9"/><path d="M3.5 9h17M3.5 15h17"/></svg>
-        </div>
-        <span>Baller</span>
-    </a>
-    <div class="nav-links">
-        <a href="#features">Features</a>
-        <a href="#how">How It Works</a>
-        <a href="#" class="nav-cta">Download</a>
-    </div>
-</nav>
-
-<section class="hero">
-    <div class="hero-inner">
-        <div class="hero-text">
-            <p class="hero-tag sr">AI Basketball Training</p>
-            <h1 class="sr d1">Your personal<br><span class="accent">basketball coach</span></h1>
-            <p class="hero-body sr d2">AI-powered training plans built for your position, skill level, and schedule. Every session is purposeful. Every drill moves you forward.</p>
-            <div class="hero-actions sr d3">
-                <a href="#" class="btn-green">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-                    Download for iOS
-                </a>
-                <a href="#features" class="btn-outline">Learn more</a>
-            </div>
-        </div>
-        <div class="hero-phone sr d2">
-            <div class="phone">
-                <div class="phone-inner">
-                    <div class="phone-status"><div class="phone-notch"></div></div>
-                    <div class="phone-content">
-                        <p class="pc-greeting">Good morning</p>
-                        <p class="pc-name">Today's Plan</p>
-                        <div class="pc-card">
-                            <div class="pc-card-head">
-                                <span class="pc-card-title">Workout</span>
-                                <span class="pc-card-badge">AI Generated</span>
-                            </div>
-                            <div class="pc-drill">
-                                <div class="pc-drill-num">1</div>
-                                <span class="pc-drill-name">Crossover Series</span>
-                                <span class="pc-drill-time">8 min</span>
-                            </div>
-                            <div class="pc-drill">
-                                <div class="pc-drill-num">2</div>
-                                <span class="pc-drill-name">Catch & Shoot</span>
-                                <span class="pc-drill-time">12 min</span>
-                            </div>
-                            <div class="pc-drill">
-                                <div class="pc-drill-num">3</div>
-                                <span class="pc-drill-name">Defensive Slides</span>
-                                <span class="pc-drill-time">6 min</span>
-                            </div>
-                        </div>
-                        <div class="pc-stats">
-                            <div class="pc-stat">
-                                <div class="pc-stat-val blue">87</div>
-                                <div class="pc-stat-label">Score</div>
-                            </div>
-                            <div class="pc-stat">
-                                <div class="pc-stat-val green">12</div>
-                                <div class="pc-stat-label">Sessions</div>
-                            </div>
-                            <div class="pc-stat">
-                                <div class="pc-stat-val gold">5</div>
-                                <div class="pc-stat-label">Streak</div>
-                            </div>
-                        </div>
-                        <div class="pc-bottom">
-                            <div class="pc-btn">Start Training</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="features" id="features">
-    <div class="feat-head sr">
-        <p class="s-tag">Features</p>
-        <h2>Training that thinks with you</h2>
-        <p>Not another workout template. Baller builds real plans the way a real coach would.</p>
-    </div>
-    <div class="feat-grid">
-        <div class="feat-card sr">
-            <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg></div>
-            <h3>AI Training Plans</h3>
-            <p>Personalized workouts generated based on your position, skill level, and goals.</p>
-        </div>
-        <div class="feat-card sr d1">
-            <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
-            <h3>Progress Tracking</h3>
-            <p>Detailed performance scores and skill breakdowns after every session.</p>
-        </div>
-        <div class="feat-card sr d2">
-            <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
-            <h3>Drill Library</h3>
-            <p>Hundreds of drills for shooting, handles, footwork, defense, and more.</p>
-        </div>
-        <div class="feat-card sr">
-            <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
-            <h3>Smart Scheduling</h3>
-            <p>Set your time and Baller builds a training schedule around your life.</p>
-        </div>
-        <div class="feat-card sr d1">
-            <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
-            <h3>Adaptive Difficulty</h3>
-            <p>The AI adjusts intensity as you improve so you're always challenged.</p>
-        </div>
-        <div class="feat-card sr d2">
-            <div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg></div>
-            <h3>AI Reports</h3>
-            <p>AI-generated insights and recommendations after each training session.</p>
-        </div>
-    </div>
-</section>
-
-<section class="how" id="how">
-    <div class="how-inner">
-        <div class="how-head sr">
-            <p class="s-tag">How it works</p>
-            <h2>Start training in three steps</h2>
-        </div>
-        <div class="how-steps">
-            <div class="how-step sr">
-                <div class="step-circle">1</div>
-                <div><h3>Tell us about your game</h3><p>Position, skill level, strengths, weaknesses, and available time.</p></div>
-            </div>
-            <div class="how-step sr d1">
-                <div class="step-circle">2</div>
-                <div><h3>Get a plan built for you</h3><p>The AI designs a multi-week program with drills, progression, and rest days.</p></div>
-            </div>
-            <div class="how-step sr d2">
-                <div class="step-circle">3</div>
-                <div><h3>Train, track, repeat</h3><p>Complete workouts, log results, and get AI feedback as your plan evolves.</p></div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="cta">
-    <div class="cta-inner">
-        <h2 class="sr">Your next workout<br>starts <span class="accent">here</span></h2>
-        <p class="sr d1">Download Baller and start training with an AI coach that adapts to your game.</p>
-        <a href="#" class="btn-green sr d2">
-            <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
-            Download for iOS
-        </a>
-    </div>
-</section>
-
-<footer>
-    <div class="foot-inner">
-        <span class="foot-copy">&copy; 2026 Baller</span>
-        <div class="foot-links">
-            <a href="/privacy.html">Privacy</a>
-            <a href="/terms.html">Terms</a>
-            <a href="mailto:support@ballerai.app">Contact</a>
-        </div>
-    </div>
-</footer>
-
-<script>
-const obs = new IntersectionObserver(
-    es => es.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); }),
-    { threshold: 0.1 }
-);
-document.querySelectorAll('.sr').forEach(el => obs.observe(el));
-</script>
-
 </body>
 </html>
