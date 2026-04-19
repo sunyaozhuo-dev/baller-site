@@ -2,9 +2,31 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=1440">
-  <title>Baller — Outwork. Out-train. Outscore.</title>
-  <meta name="description" content="AI training. Voice coaching. Adaptive plans. For players who already know what hard work feels like.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Baller — AI coach + shot tracking. On the court.</title>
+  <meta name="description" content="An AI basketball coach that adapts to you, and a camera that sees every shot. Baller on the court.">
+  <meta name="theme-color" content="#0A0A0C">
+
+  <!-- Open Graph / iMessage / Slack / WhatsApp -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ballerai.app/">
+  <meta property="og:title" content="Baller — AI coach + shot tracking. On the court.">
+  <meta property="og:description" content="An AI basketball coach that adapts to you, and a camera that sees every shot. Baller on the court.">
+  <meta property="og:image" content="https://ballerai.app/assets/baller-logo.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://ballerai.app/">
+  <meta name="twitter:title" content="Baller — AI coach + shot tracking. On the court.">
+  <meta name="twitter:description" content="An AI basketball coach that adapts to you, and a camera that sees every shot.">
+  <meta name="twitter:image" content="https://ballerai.app/assets/baller-logo.png">
+
+  <link rel="canonical" href="https://ballerai.app/">
+  <link rel="icon" type="image/png" href="assets/baller-logo.png">
+  <link rel="apple-touch-icon" href="assets/baller-logo.png">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,700;0,9..144,900;1,9..144,700;1,9..144,900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -23,7 +45,6 @@
       <a href="#features" class="nav__link">Features</a>
       <a href="#method" class="nav__link">Method</a>
       <a href="#pricing" class="nav__link">Pricing</a>
-      <a href="#signin" class="nav__link">Sign in</a>
       <a href="#cta" class="nav__cta">Get the app</a>
     </div>
   </nav>
@@ -62,47 +83,13 @@
     <div class="hero__left">
       <div class="hero__eyebrow"></div>
       <h1 class="hero__title">Outwork.<br><em class="italic-emphasis">Out-train.</em><br>Outscore.</h1>
-      <p class="hero__subtitle">AI training. Voice coaching. Adaptive plans. For players who already know what hard work feels like.</p>
+      <p class="hero__subtitle">A plan that adapts to you. A camera that sees every shot. Baller on the court.</p>
       <a href="#cta" class="btn btn--primary hero__cta">Get the app</a>
     </div>
 
     <div class="phone phone--hero">
-      <div class="phone__screen">
-        <div class="phone__island"></div>
-        <span class="phone__time">9:41</span>
-        <span class="phone__eyebrow">TODAY</span>
-        <h3 class="phone__title">Today's Training</h3>
-        <div class="phone__ring">
-          <div class="phone__ring-inner"></div>
-          <span class="phone__ring-pct">72%</span>
-          <span class="phone__ring-label">OF GOAL</span>
-        </div>
-        <div class="phone__drill" style="top:372px">
-          <span class="phone__drill-dot"></span>
-          <span class="phone__drill-name">Form shooting</span>
-          <span class="phone__drill-meta">5 sets · 10 reps</span>
-          <span class="phone__drill-state phone__drill-state--done">DONE</span>
-        </div>
-        <div class="phone__drill" style="top:434px">
-          <span class="phone__drill-dot"></span>
-          <span class="phone__drill-name">Cone dribble drill</span>
-          <span class="phone__drill-meta">3 sets · 60 sec</span>
-          <span class="phone__drill-state phone__drill-state--done">DONE</span>
-        </div>
-        <div class="phone__drill" style="top:496px">
-          <span class="phone__drill-dot"></span>
-          <span class="phone__drill-name">Pull-up jumpers</span>
-          <span class="phone__drill-meta">4 sets · 8 reps</span>
-          <span class="phone__drill-state">GO</span>
-        </div>
-        <div class="phone__drill" style="top:558px">
-          <span class="phone__drill-dot"></span>
-          <span class="phone__drill-name">Free throw routine</span>
-          <span class="phone__drill-meta">2 sets · 25 reps</span>
-          <span class="phone__drill-state">GO</span>
-        </div>
-        <div class="phone__start-btn">Start Session</div>
-      </div>
+      <img class="phone__screen-img" src="assets/screen-today.jpg" alt="Baller — Today's training screen">
+      <img class="phone__frame" src="assets/iphone-portrait.png" alt="" aria-hidden="true">
     </div>
 
     <span class="hero__scroll">SCROLL ↓</span>
@@ -124,283 +111,95 @@
     </div>
   </section>
 
-  <!-- ===================== FEATURES ===================== -->
-  <section class="features" id="features">
+  <!-- ===================== ACT I — THE PLAN ===================== -->
+  <section class="act act--plan" id="method">
     <div class="beams">
-      <div class="bloom" style="left:200px;top:100px;width:1400px;height:1400px;background:radial-gradient(ellipse at 60% 50%, rgba(74,140,181,0.30) 0%, transparent 65%);filter:blur(30px)"></div>
-      <div class="bloom" style="left:600px;top:300px;width:900px;height:900px;background:radial-gradient(circle, rgba(74,140,181,0.40) 0%, transparent 60%);filter:blur(25px)"></div>
-      <div class="shaft" style="left:200px;top:-1000px;width:340px;height:3300px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.14) 50%, transparent 100%);filter:blur(80px);transform:rotate(-22deg)"></div>
-      <div class="shaft" style="left:500px;top:-1000px;width:280px;height:3300px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.20) 50%, transparent 100%);filter:blur(60px);transform:rotate(-22deg)"></div>
-      <div class="shaft" style="left:780px;top:-1000px;width:160px;height:3300px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.26) 50%, transparent 100%);filter:blur(50px);transform:rotate(-21deg)"></div>
-      <div class="shaft" style="left:1000px;top:-1000px;width:240px;height:3300px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.18) 50%, transparent 100%);filter:blur(60px);transform:rotate(-23deg)"></div>
-      <div class="shaft" style="left:1280px;top:-900px;width:300px;height:3200px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.14) 50%, transparent 100%);filter:blur(75px);transform:rotate(-20deg)"></div>
-    </div>
-    <div class="features__header">
-      <span class="eyebrow">01 / THE METHOD</span>
-      <h2 class="display">Six tools. <em class="italic-emphasis">One system.</em></h2>
-      <p class="lead">No fluff. No filler features. Every tool earns its place — built around the way real players actually train.</p>
+      <div class="bloom" style="left:100px;top:80px;width:1400px;height:1400px;background:radial-gradient(ellipse at 35% 50%, rgba(74,140,181,0.28) 0%, transparent 65%);filter:blur(30px)"></div>
+      <div class="bloom" style="left:-100px;top:300px;width:900px;height:900px;background:radial-gradient(circle, rgba(74,140,181,0.36) 0%, transparent 60%);filter:blur(25px)"></div>
+      <div class="bloom" style="left:60px;top:450px;width:520px;height:520px;background:radial-gradient(circle, rgba(127,181,217,0.32) 0%, transparent 60%);filter:blur(20px)"></div>
+      <div class="shaft" style="left:100px;top:-900px;width:320px;height:2900px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.14) 50%, transparent 100%);filter:blur(80px);transform:rotate(-22deg)"></div>
+      <div class="shaft" style="left:400px;top:-900px;width:240px;height:2900px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.20) 50%, transparent 100%);filter:blur(60px);transform:rotate(-22deg)"></div>
+      <div class="shaft" style="left:640px;top:-900px;width:160px;height:2900px;background:linear-gradient(90deg, transparent 0%, rgba(184,216,232,0.26) 50%, transparent 100%);filter:blur(45px);transform:rotate(-22deg)"></div>
+      <div class="shaft" style="left:820px;top:-900px;width:260px;height:2900px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.18) 50%, transparent 100%);filter:blur(55px);transform:rotate(-22deg)"></div>
+      <div class="shaft" style="left:1100px;top:-900px;width:340px;height:2900px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.12) 50%, transparent 100%);filter:blur(80px);transform:rotate(-21deg)"></div>
     </div>
 
-    <article class="feat feat--01">
-      <div class="feat__rule"></div>
-      <span class="feat__label">FEATURE 01 · AI COACH</span>
-      <span class="feat__num">01</span>
-      <h3 class="feat__title">A coach that knows your game.</h3>
-      <p class="feat__body">Adaptive plans that learn your strengths, your weak spots, and the work you avoid. Then it makes you do the work you avoid.</p>
-    </article>
+    <div class="act__header">
+      <span class="eyebrow">ACT I / THE PLAN</span>
+      <h2 class="display">The plan<br><em class="italic-emphasis">adapts to you.</em></h2>
+      <p class="lead">One-minute check-in each morning. Baller listens to how your body feels, then rewrites the session — harder when you're fresh, lighter when you're flat, and always around the work you've been avoiding.</p>
+    </div>
 
-    <article class="feat feat--02">
-      <div class="feat__rule"></div>
-      <span class="feat__label">FEATURE 02 · VOICE</span>
-      <span class="feat__num">02</span>
-      <h3 class="feat__title">Hands-free voice coach.</h3>
-      <p class="feat__body">Real-time form cues, set timers, and tempo callouts — without ever looking at your phone.</p>
-    </article>
+    <!-- Act I hero phone: Training settings (vertical) -->
+    <div class="phone phone--act1">
+      <img class="phone__screen-img" src="assets/screen-plan.jpg" alt="Baller — Training settings screen">
+      <img class="phone__frame" src="assets/iphone-portrait.png" alt="" aria-hidden="true">
+    </div>
 
-    <article class="feat feat--03">
-      <div class="feat__rule"></div>
-      <span class="feat__label">FEATURE 03 · PLANS</span>
-      <span class="feat__num">03</span>
-      <h3 class="feat__title">Plans that breathe.</h3>
-      <p class="feat__body">Hard days, easy days, and rest — programmed like a real strength coach would.</p>
-    </article>
-
-    <article class="feat feat--04">
-      <div class="feat__rule"></div>
-      <span class="feat__label">FEATURE 04 · DRILLS</span>
-      <span class="feat__num">04</span>
-      <h3 class="feat__title">500+ drills, library deep.</h3>
-      <p class="feat__body">Pulled from college and pro programs. Filmed, captioned, scored.</p>
-    </article>
-
-    <article class="feat feat--05">
-      <div class="feat__rule"></div>
-      <span class="feat__label">FEATURE 05 · PROGRESS</span>
-      <span class="feat__num">05</span>
-      <h3 class="feat__title">Progress in motion.</h3>
-      <p class="feat__body">Track shots made, reps logged, streaks held. Numbers that mean something.</p>
-    </article>
-
-    <article class="feat feat--06">
-      <div class="feat__rule"></div>
-      <span class="feat__label">FEATURE 06 · REMINDERS</span>
-      <span class="feat__num">06</span>
-      <h3 class="feat__title">Reminders that hit like a friend, not a notification.</h3>
-      <p class="feat__body">Short messages, the right tone, the right time. No spam.</p>
-    </article>
+    <!-- Sub-features row (three columns) -->
+    <div class="subfeats">
+      <div class="subfeat">
+        <span class="subfeat__num">01</span>
+        <span class="subfeat__label">PERIODIZATION</span>
+        <h3 class="subfeat__title">Hard days, easy days, rest.</h3>
+        <p class="subfeat__body">Programmed like a real strength coach would — so you build, not burn out.</p>
+      </div>
+      <div class="subfeat">
+        <span class="subfeat__num">02</span>
+        <span class="subfeat__label">DRILL LIBRARY</span>
+        <h3 class="subfeat__title">A library built deep.</h3>
+        <p class="subfeat__body">Pulled from college and pro programs. Captioned and scored for every level.</p>
+      </div>
+      <div class="subfeat">
+        <span class="subfeat__num">03</span>
+        <span class="subfeat__label">PROGRESS</span>
+        <h3 class="subfeat__title">Trends you can see.</h3>
+        <p class="subfeat__body">Accuracy curves, streaks held, reps logged. Numbers that prove the plan is working.</p>
+      </div>
+    </div>
   </section>
 
-  <!-- ===================== APP PREVIEW ===================== -->
-  <section class="app-preview">
+  <!-- ===================== ACT II — THE EYE ===================== -->
+  <section class="act act--camera" id="features">
     <div class="beams">
-      <div class="bloom" style="left:0;top:100px;width:1600px;height:1200px;background:radial-gradient(ellipse at 50% 60%, rgba(74,140,181,0.40) 0%, transparent 60%);filter:blur(30px)"></div>
-      <div class="bloom" style="left:300px;top:300px;width:900px;height:900px;background:radial-gradient(circle, rgba(74,140,181,0.45) 0%, transparent 60%);filter:blur(25px)"></div>
-      <div class="bloom" style="left:550px;top:450px;width:500px;height:500px;background:radial-gradient(circle, rgba(127,181,217,0.40) 0%, transparent 60%);filter:blur(20px)"></div>
+      <div class="bloom" style="left:0;top:100px;width:1600px;height:1400px;background:radial-gradient(ellipse at 50% 50%, rgba(74,140,181,0.38) 0%, transparent 60%);filter:blur(30px)"></div>
+      <div class="bloom" style="left:400px;top:400px;width:900px;height:900px;background:radial-gradient(circle, rgba(74,140,181,0.50) 0%, transparent 60%);filter:blur(25px)"></div>
+      <div class="bloom" style="left:620px;top:520px;width:500px;height:500px;background:radial-gradient(circle, rgba(127,181,217,0.48) 0%, transparent 60%);filter:blur(20px)"></div>
       <div class="shaft" style="left:100px;top:-900px;width:320px;height:2900px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.16) 50%, transparent 100%);filter:blur(80px);transform:rotate(-22deg)"></div>
-      <div class="shaft" style="left:380px;top:-900px;width:280px;height:2900px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.22) 50%, transparent 100%);filter:blur(60px);transform:rotate(-23deg)"></div>
-      <div class="shaft" style="left:620px;top:-900px;width:200px;height:2900px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.30) 50%, transparent 100%);filter:blur(50px);transform:rotate(-22deg)"></div>
-      <div class="shaft" style="left:830px;top:-900px;width:140px;height:2900px;background:linear-gradient(90deg, transparent 0%, rgba(184,216,232,0.34) 50%, transparent 100%);filter:blur(40px);transform:rotate(-22deg)"></div>
-      <div class="shaft" style="left:980px;top:-900px;width:200px;height:2900px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.26) 50%, transparent 100%);filter:blur(50px);transform:rotate(-21deg)"></div>
-      <div class="shaft" style="left:1190px;top:-900px;width:280px;height:2900px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.18) 50%, transparent 100%);filter:blur(60px);transform:rotate(-22deg)"></div>
-    </div>
-    <div class="app-preview__header">
-      <span class="eyebrow">02 / THE PRODUCT</span>
-      <h2 class="display">Inside the app.</h2>
-      <p class="lead">Three screens. One purpose: get you better, faster, every session.</p>
+      <div class="shaft" style="left:400px;top:-900px;width:260px;height:2900px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.24) 50%, transparent 100%);filter:blur(55px);transform:rotate(-22deg)"></div>
+      <div class="shaft" style="left:640px;top:-900px;width:200px;height:2900px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.32) 50%, transparent 100%);filter:blur(45px);transform:rotate(-22deg)"></div>
+      <div class="shaft" style="left:830px;top:-900px;width:140px;height:2900px;background:linear-gradient(90deg, transparent 0%, rgba(184,216,232,0.38) 50%, transparent 100%);filter:blur(30px);transform:rotate(-22deg)"></div>
+      <div class="shaft" style="left:970px;top:-900px;width:210px;height:2900px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.28) 50%, transparent 100%);filter:blur(50px);transform:rotate(-22deg)"></div>
+      <div class="shaft" style="left:1180px;top:-900px;width:280px;height:2900px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.18) 50%, transparent 100%);filter:blur(60px);transform:rotate(-21deg)"></div>
     </div>
 
-    <!-- Phone 1: Today's Plan -->
-    <div class="phone phone--app1">
-      <div class="phone__screen">
-        <div class="phone__island"></div>
-        <span class="phone__time">9:41</span>
-        <span class="phone__eyebrow">TODAY</span>
-        <h3 class="phone__title">Today's Plan.</h3>
-        <span class="ap__progress-label">4 OF 6 DRILLS</span>
-        <div class="ap__progress-track"></div>
-        <div class="ap__progress-fill"></div>
-        <div class="ap__row" style="top:248px"><span class="ap__dot"></span><span class="ap__name">Form shooting</span><span class="ap__meta">5 × 10</span></div>
-        <div class="ap__row" style="top:304px"><span class="ap__dot"></span><span class="ap__name">Cone dribble</span><span class="ap__meta">3 × 60s</span></div>
-        <div class="ap__row" style="top:360px"><span class="ap__dot"></span><span class="ap__name">Pull-up jumpers</span><span class="ap__meta">4 × 8</span></div>
-        <div class="ap__row" style="top:416px"><span class="ap__dot"></span><span class="ap__name">Free throws</span><span class="ap__meta">2 × 25</span></div>
-        <div class="ap__row" style="top:472px"><span class="ap__dot"></span><span class="ap__name">Defensive slides</span><span class="ap__meta">5 × 30s</span></div>
-        <div class="ap__row" style="top:528px"><span class="ap__dot"></span><span class="ap__name">Cool down</span><span class="ap__meta">5 min</span></div>
+    <div class="act__header">
+      <span class="eyebrow">ACT II / THE EYE</span>
+      <h2 class="display">The camera sees<br><em class="italic-emphasis">the shot.</em></h2>
+      <p class="lead">Set your phone courtside. Baller watches every rep, traces the arc, counts the make. Every session auto-logged — no extra gear, no tapping, no stopping mid-rep.</p>
+    </div>
+
+    <!-- Act II hero phone: Shot Tracking (landscape) -->
+    <div class="phone phone--act2">
+      <img class="phone__screen-img" src="assets/screen-shot-tracking.jpg" alt="Baller — Shot tracking HUD with live arc detection">
+      <img class="phone__frame" src="assets/iphone-landscape.png" alt="" aria-hidden="true">
+    </div>
+
+    <!-- Sub-features row (two columns) -->
+    <div class="subfeats subfeats--two">
+      <div class="subfeat">
+        <span class="subfeat__num">01</span>
+        <span class="subfeat__label">HANDS-FREE VOICE</span>
+        <h3 class="subfeat__title">Cues without looking down.</h3>
+        <p class="subfeat__body">Real-time form calls, set timers, tempo callouts — all in your earbuds, never on the screen.</p>
+      </div>
+      <div class="subfeat">
+        <span class="subfeat__num">02</span>
+        <span class="subfeat__label">DRILL-LINKED STATS</span>
+        <h3 class="subfeat__title">Every drill auto-logged.</h3>
+        <p class="subfeat__body">Makes, shots, accuracy — counted shot by shot and tied back to the drill you were running.</p>
       </div>
     </div>
-
-    <!-- Phone 2: Voice Coach -->
-    <div class="phone phone--app2">
-      <div class="phone__screen">
-        <div class="phone__island"></div>
-        <span class="phone__time">9:41</span>
-        <span class="phone__eyebrow">VOICE COACH</span>
-        <h3 class="phone__title">Listening…</h3>
-        <div class="vc__ring vc__ring--1"></div>
-        <div class="vc__ring vc__ring--2"></div>
-        <div class="vc__ring vc__ring--3"></div>
-        <div class="vc__ring vc__ring--4"></div>
-        <div class="vc__ring vc__ring--5"></div>
-        <div class="vc__core"></div>
-        <div class="vc__waveform">
-          <span style="height:10px"></span><span style="height:22px"></span><span style="height:34px"></span><span style="height:18px"></span><span style="height:28px"></span><span style="height:42px"></span><span style="height:30px"></span><span style="height:16px"></span><span style="height:24px"></span><span style="height:38px"></span><span style="height:26px"></span><span style="height:14px"></span><span style="height:22px"></span><span style="height:10px"></span>
-        </div>
-        <div class="vc__quote">
-          <span class="vc__quote-label">COACH</span>
-          <p class="vc__quote-text">Bend your knees on the catch. Good — three more reps.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Phone 3: Progress -->
-    <div class="phone phone--app3">
-      <div class="phone__screen">
-        <div class="phone__island"></div>
-        <span class="phone__time">9:41</span>
-        <span class="phone__eyebrow">THIS WEEK</span>
-        <h3 class="phone__title">Progress.</h3>
-        <div class="pg__streak">
-          <span class="pg__streak-label">CURRENT STREAK</span>
-          <span class="pg__streak-num">17 days</span>
-        </div>
-        <span class="pg__chart-label">MINUTES TRAINED</span>
-        <div class="pg__bars">
-          <div class="pg__bar" style="height:86px"></div>
-          <div class="pg__bar" style="height:118px"></div>
-          <div class="pg__bar" style="height:74px"></div>
-          <div class="pg__bar" style="height:130px"></div>
-          <div class="pg__bar" style="height:102px"></div>
-          <div class="pg__bar" style="height:146px"></div>
-          <div class="pg__bar" style="height:98px"></div>
-        </div>
-        <div class="pg__bar-labels">
-          <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span>
-        </div>
-        <div class="pg__stats">
-          <div class="pg__stat">
-            <span class="pg__stat-label">SHOTS MADE</span>
-            <span class="pg__stat-num">1,284</span>
-          </div>
-          <div class="pg__stat" style="left:160px">
-            <span class="pg__stat-label">ACCURACY</span>
-            <span class="pg__stat-num pg__stat-num--ocean">64%</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===================== HOW IT WORKS ===================== -->
-  <section class="how">
-    <div class="beams">
-      <div class="bloom" style="left:200px;top:200px;width:1400px;height:1400px;background:radial-gradient(ellipse at 50% 50%, rgba(74,140,181,0.22) 0%, transparent 65%);filter:blur(40px)"></div>
-      <div class="bloom" style="left:200px;top:1000px;width:1400px;height:1200px;background:radial-gradient(ellipse at 50% 50%, rgba(74,140,181,0.18) 0%, transparent 65%);filter:blur(40px)"></div>
-      <div class="shaft" style="left:200px;top:-1200px;width:380px;height:4000px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.12) 50%, transparent 100%);filter:blur(90px);transform:rotate(-22deg)"></div>
-      <div class="shaft" style="left:500px;top:-1200px;width:260px;height:4000px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.18) 50%, transparent 100%);filter:blur(60px);transform:rotate(-22deg)"></div>
-      <div class="shaft" style="left:760px;top:-1200px;width:200px;height:4000px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.22) 50%, transparent 100%);filter:blur(55px);transform:rotate(-21deg)"></div>
-      <div class="shaft" style="left:980px;top:-1200px;width:240px;height:4000px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.18) 50%, transparent 100%);filter:blur(60px);transform:rotate(-22deg)"></div>
-      <div class="shaft" style="left:1240px;top:-1200px;width:340px;height:4000px;background:linear-gradient(90deg, transparent 0%, rgba(127,181,217,0.12) 50%, transparent 100%);filter:blur(80px);transform:rotate(-21deg)"></div>
-    </div>
-    <div class="how__header">
-      <span class="eyebrow">03 / THE RITUAL</span>
-      <h2 class="display">One minute.<br><em class="italic-emphasis">Then the work.</em></h2>
-      <p class="lead">Three steps to get rolling. After that, just lace up and show up.</p>
-    </div>
-    <div class="how__divider" style="top:360px"></div>
-
-    <div class="how__step" style="top:420px">
-      <span class="how__numeral">I</span>
-      <div class="how__text">
-        <span class="how__label">STEP ONE</span>
-        <h3 class="how__title">Tell us where your body is today.</h3>
-        <p class="how__body">One minute. A few quick questions — how your legs feel, what hurt yesterday, what to fix today. We listen, then we build.</p>
-      </div>
-      <div class="phone phone--how">
-        <div class="phone__screen">
-          <span class="how__phone-time">9:41</span>
-          <span class="how__phone-eyebrow">QUICK CHECK-IN</span>
-          <h4 class="how__phone-title">How are you?</h4>
-          <div class="how__phone-card" style="top:96px">
-            <span class="how__phone-card-label">LEGS FEEL?</span>
-            <span class="how__phone-card-value">Fresh</span>
-          </div>
-          <div class="how__phone-card" style="top:148px">
-            <span class="how__phone-card-label">LAST SESSION</span>
-            <span class="how__phone-card-value">Yesterday · 12 min</span>
-          </div>
-          <div class="how__phone-card" style="top:200px">
-            <span class="how__phone-card-label">TODAY'S FOCUS</span>
-            <span class="how__phone-card-value">Pull-up jumpers</span>
-          </div>
-          <div class="how__phone-btn">Submit</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="how__divider" style="top:800px"></div>
-
-    <div class="how__step" style="top:840px">
-      <span class="how__numeral how__numeral--ii">II</span>
-      <div class="how__text">
-        <span class="how__label">STEP TWO</span>
-        <h3 class="how__title">Follow the plan we built for you.</h3>
-        <p class="how__body">A daily session, programmed by the same logic college coaches use. Drills with intention. Reps that matter. No filler, no guesswork.</p>
-      </div>
-      <div class="phone phone--how">
-        <div class="phone__screen">
-          <span class="how__phone-time">9:41</span>
-          <span class="how__phone-eyebrow">TODAY'S SESSION</span>
-          <h4 class="how__phone-title">Drill 3 of 6</h4>
-          <div class="how__phone-card how__phone-card--big">
-            <span class="how__phone-card-label">PULL-UP JUMPERS</span>
-            <span class="how__phone-card-time">0:32</span>
-            <span class="how__phone-card-meta">of 1:00</span>
-            <div class="how__phone-track"></div>
-            <div class="how__phone-fill"></div>
-            <span class="how__phone-set">Set 2 of 4</span>
-          </div>
-          <div class="how__phone-btn how__phone-btn--small">Pause</div>
-          <div class="how__phone-btn how__phone-btn--small how__phone-btn--right">Skip</div>
-          <div class="how__phone-btn">Mark complete</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="how__divider" style="top:1220px"></div>
-
-    <div class="how__step" style="top:1260px">
-      <span class="how__numeral how__numeral--iii">III</span>
-      <div class="how__text how__text--iii">
-        <span class="how__label">STEP THREE</span>
-        <h3 class="how__title">One line. Then you're out.</h3>
-        <p class="how__body">Quick honest check-in at the end. Numbers logged, streak protected, tomorrow already cooking. Clean, no friction, on to the rest of your day.</p>
-      </div>
-      <div class="phone phone--how">
-        <div class="phone__screen">
-          <span class="how__phone-time">9:41</span>
-          <span class="how__phone-eyebrow">SESSION COMPLETE</span>
-          <h4 class="how__phone-title how__phone-title--big">Done.</h4>
-          <div class="how__phone-card" style="top:134px;height:44px">
-            <span class="how__phone-card-label">COMPLETED</span>
-            <span class="how__phone-card-value">100%</span>
-          </div>
-          <div class="how__phone-mini">
-            <span class="how__phone-mini-label">REPS</span>
-            <span class="how__phone-mini-val">48</span>
-          </div>
-          <div class="how__phone-mini" style="left:84px">
-            <span class="how__phone-mini-label">TIME</span>
-            <span class="how__phone-mini-val">12 min</span>
-          </div>
-          <div class="how__phone-card" style="top:234px;height:44px">
-            <span class="how__phone-card-label">STREAK</span>
-            <span class="how__phone-card-value">17 days</span>
-          </div>
-          <div class="how__phone-btn">Save &amp; exit</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="how__divider" style="top:1640px"></div>
   </section>
 
   <!-- ===================== PRICING ===================== -->
@@ -428,10 +227,10 @@
       <div class="plan__price">$0</div>
       <span class="plan__price-meta">forever — no card needed</span>
       <ul class="plan__features">
-        <li>Daily training plan</li>
-        <li>Drill library access</li>
-        <li>Basic progress tracking</li>
-        <li>One device</li>
+        <li>Real-time shot tracking</li>
+        <li>Deep drill library</li>
+        <li>Session builder</li>
+        <li>Basic training reports</li>
       </ul>
       <a href="#start" class="btn btn--secondary plan__cta">Start free</a>
     </article>
@@ -439,16 +238,16 @@
     <article class="plan plan--monthly">
       <div class="plan__rule"></div>
       <span class="plan__label">PRO MONTHLY</span>
-      <div class="plan__price">$19.99</div>
+      <div class="plan__price">$9.99</div>
       <span class="plan__price-meta">per month · billed monthly</span>
       <ul class="plan__features">
         <li>Everything in Free</li>
+        <li>AI-generated training plans</li>
         <li>Hands-free voice coach</li>
-        <li>AI adaptive plans</li>
-        <li>Form analysis &amp; feedback</li>
-        <li>Unlimited drill library</li>
+        <li>Adaptive session adjustment</li>
+        <li>Multi-week periodization</li>
+        <li>Advanced analytics</li>
         <li>Streak rescue &amp; reminders</li>
-        <li>Multi-device sync</li>
       </ul>
       <a href="#monthly" class="btn btn--secondary plan__cta">Get the app</a>
     </article>
@@ -456,16 +255,16 @@
     <article class="plan plan--annual">
       <div class="plan__rule"></div>
       <span class="plan__label">PRO ANNUAL · BEST VALUE</span>
-      <div class="plan__price">$99</div>
-      <span class="plan__price-meta">per year · save 58% vs monthly · works out to $8.25/month</span>
+      <div class="plan__price">$69.99</div>
+      <span class="plan__price-meta">per year · save 42% vs monthly · works out to $5.83/month</span>
       <ul class="plan__features">
         <li>Everything in Free</li>
+        <li>AI-generated training plans</li>
         <li>Hands-free voice coach</li>
-        <li>AI adaptive plans</li>
-        <li>Form analysis &amp; feedback</li>
-        <li>Unlimited drill library</li>
+        <li>Adaptive session adjustment</li>
+        <li>Multi-week periodization</li>
+        <li>Advanced analytics</li>
         <li>Streak rescue &amp; reminders</li>
-        <li>Multi-device sync</li>
       </ul>
       <a href="#annual" class="btn btn--primary plan__cta">Get the app</a>
     </article>
@@ -502,7 +301,7 @@
       <div class="footer__brand">
         <img src="assets/baller-logo.png" alt="" class="footer__logo">
         <span class="footer__wordmark">BALLER</span>
-        <p class="footer__tagline">AI training built for serious players.</p>
+        <p class="footer__tagline">Baller on the court.</p>
       </div>
       <div class="footer__cols">
         <div class="footer__col">
@@ -530,17 +329,14 @@
           <span class="footer__col-title">LEGAL</span>
           <a href="privacy.html">Privacy</a>
           <a href="terms.html">Terms</a>
-          <a href="privacy.html#cookies">Cookies</a>
+          <a href="mailto:support@ballerai.app">Contact</a>
         </div>
       </div>
     </div>
     <div class="footer__bottom">
-      <span class="footer__copy">© 2026 Baller · Vancouver · Beijing</span>
+      <span class="footer__copy">© 2026 Baller · <a href="mailto:support@ballerai.app">support@ballerai.app</a></span>
       <div class="footer__socials">
-        <a href="#instagram">INSTAGRAM</a>
-        <a href="#tiktok">TIKTOK</a>
-        <a href="#youtube">YOUTUBE</a>
-        <a href="#x">X</a>
+        <a href="https://instagram.com/baller_ai_" target="_blank" rel="noopener">INSTAGRAM</a>
       </div>
     </div>
   </footer>
