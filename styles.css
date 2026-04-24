@@ -2109,12 +2109,13 @@ ul { list-style: none; }
     left: 0;
     top: 0;
     width: 100%;
+    text-align: center;
   }
   .hero__eyebrow {
     position: relative;
     left: 0;
     top: 0;
-    margin-bottom: 12px;
+    margin: 0 auto 12px;
   }
   .hero__title {
     position: relative;
@@ -2146,11 +2147,13 @@ ul { list-style: none; }
   }
   .phone--hero {
     position: relative;
-    left: 50%;
-    top: 0;
-    margin: 60px 0 0;
-    transform: translateX(-50%) scale(0.78);
-    transform-origin: top center;
+    left: auto;
+    top: auto;
+    width: min(260px, calc(100vw - 80px));
+    height: auto;
+    aspect-ratio: 340 / 695;
+    margin: 60px auto 0;
+    transform: none;
   }
   .hero__scroll { display: none; }
 
@@ -2192,11 +2195,14 @@ ul { list-style: none; }
   }
   .phone--act1 {
     position: relative;
-    left: 50%;
-    top: 0;
-    margin: 48px 0 0;
-    transform: translateX(-50%) rotate(-2deg) scale(0.82);
-    transform-origin: top center;
+    left: auto;
+    top: auto;
+    width: min(260px, calc(100vw - 80px));
+    height: auto;
+    aspect-ratio: 387 / 791;
+    margin: 48px auto 0;
+    transform: rotate(-2deg);
+    transform-origin: center center;
   }
   .act--plan .subfeats {
     position: relative;
@@ -2235,17 +2241,24 @@ ul { list-style: none; }
     text-align: left;
     font-size: 16px;
   }
-  /* Landscape phone — scale to fit viewport width */
+  /* Landscape phone — fit viewport width via width + aspect-ratio */
   .phone--act2 {
     position: relative;
-    left: 50%;
-    top: 0;
-    margin: 48px 0 0;
-    --act2-scale: calc((100vw - 48px) / 960);
-    transform: translateX(-50%) scale(var(--act2-scale));
-    transform-origin: top center;
-    margin-bottom: calc(480px * (var(--act2-scale) - 1));
+    left: auto;
+    top: auto;
+    width: min(342px, calc(100vw - 48px));
+    height: auto;
+    aspect-ratio: 960 / 470;
+    margin: 48px auto 0;
+    transform: none;
   }
+
+  /* Screen-img border-radius scales with phone width so the image tucks
+     cleanly inside the phone frame on mobile (fixed 43/49/60px from
+     desktop reads too large once the phone shrinks). */
+  .phone--hero .phone__screen-img { border-radius: 32px; }
+  .phone--act1 .phone__screen-img { border-radius: 32px; }
+  .phone--act2 .phone__screen-img { border-radius: 22px; }
   .act--camera .subfeats {
     position: relative;
     left: 0;
@@ -2354,10 +2367,10 @@ ul { list-style: none; }
   }
   .final-cta__btn {
     position: relative;
-    left: 50%;
+    left: auto;
     top: 0;
     margin-top: 36px;
-    transform: translateX(-50%);
+    transform: none;
     width: 200px;
     height: 56px;
   }
@@ -2374,17 +2387,21 @@ ul { list-style: none; }
   .footer__top {
     flex-direction: column;
     gap: 40px;
+    align-items: center;
+    text-align: center;
   }
   .footer__brand { width: 100%; }
+  .footer__logo { margin-left: auto; margin-right: auto; }
   .footer__cols {
     flex-wrap: wrap;
     gap: 36px 40px;
+    justify-content: center;
   }
-  .footer__col { min-width: 110px; }
+  .footer__col { min-width: 110px; text-align: center; }
   .footer__bottom {
     flex-direction: column;
     gap: 20px;
-    align-items: flex-start;
+    align-items: center;
     margin-top: 48px;
   }
   .footer__socials { gap: 20px; }
@@ -2396,6 +2413,4 @@ ul { list-style: none; }
   .act--plan .act__header .display,
   .act--camera .act__header .display,
   .pricing__header .display { font-size: 40px; }
-  .phone--hero { transform: translateX(-50%) scale(0.7); }
-  .phone--act1 { transform: translateX(-50%) rotate(-2deg) scale(0.72); }
 }
